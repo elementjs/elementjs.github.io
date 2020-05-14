@@ -1,0 +1,365 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0; margin: 0;
+  overflow: hidden;
+  background-color: rgb(var(--st-bg));
+}
+
+b {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+  box-sizing: border-box;
+  color: rgb(var(--st-primary));
+  --st-bg: 255, 255, 255;
+  --st-primary: 10, 10, 11;
+  --st-class: 75, 40, 130;
+  --st-interface: 136, 14, 79;
+  --st-typealias: 0, 96, 100;
+  --st-function: 27, 94, 32;
+  --st-var: 230, 81, 0;
+  --st-namespace: 196, 167, 5;
+  --st-error: 214, 48, 49;
+}
+
+body.dark {
+  --st-bg: 30, 30, 31;
+  --st-primary: 255, 255, 255;
+  --st-class: 129, 178, 252;
+  --st-interface: 202, 166, 183;
+  --st-typealias: 177, 176, 174;
+  --st-function: 112, 192, 155;
+  --st-var: 240, 155, 117;
+  --st-namespace: 186, 176, 136;
+  --st-error: 255, 99, 99;
+}
+
+.st-type {
+  /* background-color: rgba(var(--st-primary), 0.14); */
+  padding: 0 2px;
+  border-bottom: 2px solid rgba(var(--st-primary), 0.14);
+}
+
+.st-type > .st-type {
+  padding-bottom: 3px;
+  border-bottom: 2px solid rgba(var(--st-primary), 0.24);
+}
+
+code {
+  font-family: 'Ubuntu Mono';
+  background-color: rgba(0, 0, 0, 0.07);
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+a > code {
+  color: rgba(var(--st-class), 1);
+  text-decoration: underline;
+}
+
+.st-doc p > code, .st-doc li > code {
+  white-space: pre;
+  background: rgba(var(--st-primary), 0.07);
+  padding: 0 2px;
+}
+
+blockquote {
+  /* font-size: 0.8em; */
+  margin: 0;
+  padding: 0.6em;
+  border-left: 8px solid rgba(var(--st-primary), 0.2);
+  background-color: rgba(var(--st-primary), 0.07);
+}
+
+blockquote > :first-child {
+  margin-top: 0;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.st-doc {
+  font-weight: 300;
+  padding: 16px;
+  /* background-color: rgba(var(--st-primary), 0.02); */
+}
+
+.st-doc > :first-child {
+  margin-top: 0;
+}
+
+.st-doc > :last-child {
+  margin-bottom: 0;
+}
+
+.st-block {
+  position: relative;
+  /* overflow: hidden; */
+  /* padding-bottom: 16px; */
+  background-color: rgba(var(--st-primary), 0.06);
+  /* border-radius: 3px; */
+}
+
+.st-block + .st-block {
+  margin-top: 32px;
+}
+
+.st-block .st-kind {
+  position: absolute;
+  font-weight: bolder;
+  padding: 0 4px;
+  left: 0;
+  transform: translateX(calc(-100% - 8px));
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(var(--st-primary), 0.5);
+  border-radius: 2px;
+}
+
+.st-kind-namespace {
+  --st-primary: var(--st-namespace);
+}
+
+.st-kind-function {
+  --st-primary: var(--st-function);
+}
+
+.st-kind-class {
+  --st-primary: var(--st-class);
+}
+
+.st-kind-interface {
+  --st-primary: var(--st-interface);
+}
+
+.st-kind-typealias {
+  --st-primary: var(--st-typealias);
+}
+
+.st-kind-var {
+  --st-primary: var(--st-var);
+}
+
+.st-error {
+  background-color: rgba(var(--st-error), 0.14);
+  /* color: rgba(255, 255, 255, 1); */
+}
+
+.st-docmain > .st-block > .st-name {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.st-name {
+  color: rgba(var(--st-bg), 0.95);
+  padding: 8px 16px;
+  background-color: rgba(var(--st-primary), 1);
+  font-family: 'Ubuntu Mono', monospace;
+  white-space: pre-wrap;
+  font-size: 18px;
+}
+
+.st-name > * {
+  --st-primary: var(--st-bg);
+}
+
+.st-name + .st-name {
+  margin-top: 2px;
+}
+
+pre {
+  background-color: rgba(var(--st-primary), 0.07);
+  padding: 4px;
+}
+
+.hljs-tag {
+  color: rgba(var(--st-function), 1);
+}
+
+
+.st-row {
+  display: flex;
+  flex: row;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.st-toc {
+  padding: 16px;
+  overflow: auto;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(var(--st-primary));
+}
+
+a:hover {
+  background: rgba(var(--st-primary), 0.1);
+}
+
+.st-docmain {
+  padding: 0 32px 32px 32px;
+  /* padding-left: 90px; */
+  flex-basis: 0;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.st-docmain > :first-child {
+  margin-top: 32px;
+}
+
+.st-nest {
+  /* margin-top: 16px; */
+  padding: 16px;
+}
+
+.st-nest > .st-block + .st-block {
+  margin-top: 16px;
+}
+
+.st-docmain > * {
+  max-width: 1024px;
+}
+
+.st-docmain
+
+.st-docmain > .st-block {
+  margin-bottom: 64px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(var(--st-primary), 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--st-primary), 0.1);
+}
+
+.st-search {
+  margin: 16px;
+}
+
+input {
+  background: rgba(var(--st-primary), 0.02);
+  border: 1px solid rgba(var(--st-primary), 0.14);
+  padding: 4px;
+  color: rgb(var(--st-primary));
+  outline: 0;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-absolute-grow {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+pre {
+  overflow: visible !important;
+  max-width: 1024px;
+}
+
+.optional {
+  font-style: italic;
+  color: rgba(var(--st-primary), 0.7)
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 1em 0;
+}
+
+.st-example {
+  margin: 2em 0;
+}
+
+
+#st-playground-overlay {
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.54);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#st-playground-header {
+  background: rgba(var(--st-class), 1);
+  color: rgba(var(--st-bg), 0.93);
+  width: 90%;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+#st-playground-header > div {
+  flex-grow: 1;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#st-playground-root {
+  width: 90%;
+  height: 90%;
+  top: 5%;
+  left: 5%;
+  display: flex;
+  flex-direction: row;
+}
+
+#ifr {
+  flex-grow: 1;
+  flex-basis: 0;
+  background: white;
+}
+
+#st-playground {
+  flex-grow: 3;
+  flex-basis: 0;
+}
+
+iframe {
+  border: 0;
+}
