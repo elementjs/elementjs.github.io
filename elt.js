@@ -90,86 +90,52 @@
          *
          * Used in Observers and combined observables to know when a value has been set for the first time.
          */
-        o_1.NOVALUE = Symbol('NOVALUE');
+        o_1.NoValue = Symbol('NoValue');
         function isReadonlyObservable(_) {
             return _ instanceof Observable;
         }
         o_1.isReadonlyObservable = isReadonlyObservable;
         /**
-         * A helper class to deal with changes from an old `#o.Observable` value to a new one.
-         * @category observable, toc
-         */
-        class Changes {
-            constructor(n, o = o_1.NOVALUE) {
-                this.n = n;
-                this.o = o;
-            }
-            /**
-             * Return true if the object changed compared to its previous value.
-             * If there was no previous value, return true
-             *
-             *  changes, the function will return true.
-             */
-            changed(...ex) {
-                const old = this.o;
-                const n = this.n;
-                if (old === o_1.NOVALUE)
-                    return true;
-                if (ex.length > 0) {
-                    for (var e of ex) {
-                        if (e(n) !== e(old))
-                            return true;
-                    }
-                    return false;
-                }
-                return true;
-            }
-            /**
-             * Does the same as changed, except that if there was no previous value,
-             * return false.
-             *
-             *  undefined, it means that there was no previous value.
-             */
-            updated(...ex) {
-                const old = this.o;
-                const n = this.n;
-                if (old === o_1.NOVALUE)
-                    return false;
-                if (ex.length > 0) {
-                    for (var e of ex) {
-                        const _o = e(old);
-                        // we have an update only if there was an old value different
-                        // from our current value that was not undefined.
-                        if (_o !== undefined && e(n) !== _o)
-                            return true;
-                    }
-                    return false;
-                }
-                return old !== n;
-            }
-            hasOldValue() {
-                return this.o !== o_1.NOVALUE;
-            }
-            oldValue(def) {
-                if (this.o === o_1.NOVALUE) {
-                    if (arguments.length === 0)
-                        throw new Error('there is no old value');
-                    return def;
-                }
-                return this.o;
-            }
-        }
-        o_1.Changes = Changes;
-        /**
+         * An `Observer` observes an [[o.Observable]]. `Observable`s maintain a list of **active**
+         * observers that are observing it. Whenever their value change, all the registered
+         * `Observer`s have their `refresh` method called.
+         *
+         * An `Observer` is built with a function that will be called when it is refreshed and
+         * the value **changed** from the previous value it knew.
+         *
+         * This behaviour has implications for memory usage ; all `Observers` keep a reference
+         * to the last value they were called with, since this is the value they will pass as
+         * the `old_value` to their wrapped function.
+         *
+         * They behave this way because an Observer can be stopped and then started again.
+         * In between, the observable they watch could have been changed several times. The `fn`
+         * function they wrap may make assumptions on what value it has seen itself. Thus,
+         * by keeping a reference to the last value they were called with, they can provide it
+         * safely to `fn`.
+         *
          * @category observable, toc
          */
         class Observer {
+            /**
+             * Build an observer that will call `fn` whenever the value contained by
+             * `observable` changes.
+             */
             constructor(fn, observable) {
                 this.observable = observable;
-                this.old_value = o_1.NOVALUE;
+                /**
+                 * The last value they've been called with.
+                 */
+                this.old_value = o_1.NoValue;
+                /**
+                 * Used to speed up access
+                 * @internal
+                 */
                 this.idx = null;
                 this.fn = fn;
             }
+            /**
+             * Called by the `observable` currently being watched.
+             */
             refresh() {
                 const old = this.old_value;
                 const new_value = this.observable._value;
@@ -177,19 +143,37 @@
                     // only store the old_value if the observer will need it. Useful to not keep
                     // useless references in memory.
                     this.old_value = new_value;
-                    this.fn(new_value, new Changes(new_value, old));
+                    this.fn(new_value, old);
                 }
             }
+            /**
+             * Register on the `observable` to be `refresh`ed whenever it changes.
+             */
             startObserving() {
                 this.observable.addObserver(this);
             }
+            /**
+             * Stop being notified by the observable.
+             */
             stopObserving() {
                 this.observable.removeObserver(this);
             }
+            /**
+             * Debounce `this.refresh` by `ms` milliseconds, optionnally calling it
+             * immediately the first time around if `leading` is true.
+             *
+             * See [[o.debounce]].
+             */
             debounce(ms, leading) {
                 this.refresh = o.debounce(this.refresh.bind(this), ms, leading);
                 return this;
             }
+            /**
+             * Throttle `this.refresh` by `ms` milliseconds, optionnally calling it
+             * immediately the first time around if `leading` is true.
+             *
+             * See [[o.throttle]].
+             */
             throttle(ms, leading) {
                 this.refresh = o.throttle(this.refresh.bind(this), ms, leading);
                 return this;
@@ -286,17 +270,7 @@
          * to avoid calling the observers each time one of the observable is modified.
          *
          * ```tsx
-         * const o_1 = o(1)
-         * const o_2 = o(2)
-         * const o_3 = o.join(o_1, o_2).tf(([a, b]) => a + b)
-         *
-         * // ...
-         *
-         * // the observers on o_3 will only get called once instead of twice.
-         * o.transaction(() => {
-         *   o_1.set(2)
-         *   o_2.set(3)
-         * })
+         * @include ../examples/o.transaction.tsx
          * ```
          *
          * @category observable, toc
@@ -305,6 +279,7 @@
             queue.transaction(fn);
         }
         o_1.transaction = transaction;
+        /** @internal */
         class ChildObservableLink {
             constructor(parent, child, child_idx) {
                 this.parent = parent;
@@ -375,6 +350,23 @@
                 this._value = value;
                 if (old !== value)
                     queue.schedule(this);
+            }
+            /**
+             * Convenience function to set the value of this observable depending on its
+             * current value.
+             *
+             * The result of `fn` **must** be absolutely different from the current value. Arrays
+             * should be `slice`d first and objects copied, otherwise the observable will not
+             * trigger its observers since to it the object didn't change. For convenience, you can
+             * use [[o.clone]] or the great [immer.js](https://github.com/immerjs/immer).
+             *
+             * If the return value of `fn` is [[o.NoValue]] then the observable is untouched.
+             */
+            mutate(fn) {
+                const n = fn(this._value);
+                if (n !== o_1.NoValue) {
+                    this.set(n);
+                }
             }
             assign(partial) {
                 this.set(o.assign(this.get(), partial));
@@ -458,22 +450,22 @@
              * @internal
              */
             watched() { }
-            tf(fnget) {
-                var old = o_1.NOVALUE;
-                var old_fnget = o_1.NOVALUE;
-                var curval = o_1.NOVALUE;
-                return combine([this, fnget], ([v, fnget]) => {
-                    if (isValue(old) && isValue(old_fnget) && old === v && old_fnget === fnget && isValue(curval))
+            tf(transform) {
+                var old = o_1.NoValue;
+                var old_transform = o_1.NoValue;
+                var curval = o_1.NoValue;
+                return combine([this, transform], ([v, fnget]) => {
+                    if (old !== o_1.NoValue && old_transform !== o_1.NoValue && curval !== o_1.NoValue && old === v && old_transform === fnget)
                         return curval;
-                    curval = (typeof fnget === 'function' ? fnget(v, old, curval) : fnget.get(v, old, curval));
+                    curval = (typeof fnget === 'function' ? fnget(v, old, curval) : fnget.transform(v, old, curval));
                     old = v;
-                    old_fnget = fnget;
+                    old_transform = fnget;
                     return curval;
                 }, (newv, old, [curr, conv]) => {
                     if (typeof conv === 'function')
-                        return tuple(o_1.NOVALUE, o_1.NOVALUE);
-                    var new_orig = conv.set(newv, old, curr);
-                    return tuple(new_orig, o.NOVALUE);
+                        return tuple(o_1.NoValue, o_1.NoValue);
+                    var new_orig = conv.revert(newv, old, curr);
+                    return tuple(new_orig, o.NoValue);
                 });
             }
             /**
@@ -484,20 +476,11 @@
              * change whenever either `key` or the original observable change.
              *
              * ```tsx
-             * const o_base = o({a: 1, b: 2}) // Observable<{a: number, b: number}>
-             * const o_base_a = o_base.p('a') // Observable<number>
-             * o_base_a.set(4) // o_base now holds {a: 4, b: 2}
-             *
-             * const o_key = o('b' as 'b' | 'a') // more generally `keyof T`
-             * const o_tf_key = o_base.p(o_key) // 2
-             * o_key.set('a') // o_tf_key now has 4
-             *
-             * const o_base_2 = o([1, 2, 3, 4]) // Observable<number[]>
-             * const o_base_2_item = o_base_2.p(2) // Observable<number>
+             * @include ../examples/o.observable.p.tsx
              * ```
              */
-            p(key, def) {
-                return prop(this, key, def);
+            p(key) {
+                return prop(this, key);
             }
             key(key, def, delete_on_undefined = true) {
                 return combine([this, key, def, delete_on_undefined], ([map, key, def]) => {
@@ -513,7 +496,7 @@
                         result.set(okey, ret);
                     else
                         result.delete(okey);
-                    return tuple(result, o_1.NOVALUE, o_1.NOVALUE, o_1.NOVALUE);
+                    return tuple(result, o_1.NoValue, o_1.NoValue, o_1.NoValue);
                 });
             }
         }
@@ -526,7 +509,7 @@
          */
         class CombinedObservable extends Observable {
             constructor(deps) {
-                super(o_1.NOVALUE);
+                super(o_1.NoValue);
                 /** @internal */
                 this._links = [];
                 /** @internal */
@@ -570,7 +553,7 @@
             }
             get() {
                 if (!this._watched) {
-                    if (this.refreshParentValues() || this._value === o_1.NOVALUE) {
+                    if (this.refreshParentValues() || this._value === o_1.NoValue) {
                         this._value = this.getter(this._parents_values);
                     }
                 }
@@ -591,7 +574,7 @@
                 for (var i = 0, l = this._links, len = l.length; i < len; i++) {
                     var link = l[i];
                     var newval = res[link.child_idx];
-                    if (newval !== o_1.NOVALUE && newval !== link.parent._value) {
+                    if (newval !== o_1.NoValue && newval !== link.parent._value) {
                         link.parent.set(newval);
                     }
                 }
@@ -635,6 +618,8 @@
         }
         o_1.merge = merge;
         /**
+         * Create an observable that watches a `prop` from `obj`, giving returning the result
+         * of `def` if the value was `undefined`.
          * @category observable, toc
          */
         function prop(obj, prop, def) {
@@ -646,7 +631,7 @@
             }, (nval, _, [orig, prop]) => {
                 const newo = o.clone(orig);
                 newo[prop] = nval;
-                return tuple(newo, o_1.NOVALUE, o_1.NOVALUE);
+                return tuple(newo, o_1.NoValue, o_1.NoValue);
             });
         }
         o_1.prop = prop;
@@ -676,9 +661,9 @@
             }
             else {
                 if (typeof fn === 'function')
-                    return fn(arg, o_1.NOVALUE, o_1.NOVALUE);
+                    return fn(arg, o_1.NoValue, o_1.NoValue);
                 else
-                    return fn.get(arg, o_1.NOVALUE, o_1.NOVALUE);
+                    return fn.transform(arg, o_1.NoValue, o_1.NoValue);
             }
         }
         o_1.tf = tf;
@@ -818,21 +803,22 @@
             };
         }
         o_1.throttle = throttle;
-        o_1.clone_symbol = Symbol('o.clone_symbol');
         /**
-         * @category observable, toc
+         * Setup a function that takes no argument and returns a new value
+         * when cloning should be performed differently than just using `Object.create` and
+         * copying properties.
+         *
+         * ```jsx
+         * class MyType {
+         *   [o.sym_clone]() {
+         *     return new MyType() // or just anything that returns a clone
+         *   }
+         * }
+         * ```
+         *
+         * @category observable
          */
-        function isNoValue(t) {
-            return t === o_1.NOVALUE;
-        }
-        o_1.isNoValue = isNoValue;
-        /**
-         * @category observable, toc
-         */
-        function isValue(t) {
-            return t !== o_1.NOVALUE;
-        }
-        o_1.isValue = isValue;
+        o_1.sym_clone = Symbol('o.clone_symbol');
         /**
          * Returns its arguments as an array but typed as a tuple from Typescript's point of view.
          *
@@ -840,8 +826,7 @@
          * array, and arrays with several types end up as an union.
          *
          * ```tsx
-         * var a = ['hello', 2] // a is (string | number)[]
-         * var b = o.tuple('hello', 2) // b is [string, number]
+         * @include ../examples/o.tuple.tsx
          * ```
          *
          * @category observable, toc
@@ -850,17 +835,13 @@
             return t;
         }
         o_1.tuple = tuple;
-        function object(t) {
-            return t;
-        }
-        o_1.object = object;
         function clone(obj) {
             if (obj == null || typeof obj === 'number' || typeof obj === 'string' || typeof obj === 'boolean')
                 return obj;
             var clone;
             var key;
-            if (obj[o_1.clone_symbol]) {
-                return obj[o_1.clone_symbol]();
+            if (obj[o_1.sym_clone]) {
+                return obj[o_1.sym_clone]();
             }
             if (Array.isArray(obj)) {
                 return obj.slice();
@@ -897,6 +878,26 @@
             return clone;
         }
         o_1.clone = clone;
+        function tfpromise(obs, def) {
+            var last_promise;
+            var last_result = def === null || def === void 0 ? void 0 : def();
+            var res = new CombinedObservable([o(obs)]);
+            res.getter = ([pro]) => {
+                if (last_promise === pro)
+                    return last_result;
+                last_promise = pro;
+                pro.then(val => {
+                    if (last_promise !== pro)
+                        return;
+                    last_result = val;
+                    queue.schedule(res);
+                });
+                return last_result;
+            };
+            res.setter = undefined;
+            return res;
+        }
+        o_1.tfpromise = tfpromise;
         /**
          * Returns a function that accepts a callback. While this callback is running, all subsequent
          * calls to the created lock become no-op.
@@ -931,6 +932,7 @@
             constructor() {
                 /** @internal */
                 this._observers = [];
+                /** @internal */
                 this._callback_queue = undefined;
                 /**
                  * Boolean indicating if this object is actively observing its observers.
@@ -970,9 +972,9 @@
                 var _a;
                 if (!(obs instanceof Observable)) {
                     if (this.is_observing)
-                        fn(obs, new Changes(obs));
+                        fn(obs, o_1.NoValue);
                     else
-                        (this._callback_queue = (_a = this._callback_queue) !== null && _a !== void 0 ? _a : []).push(() => fn(obs, new Changes(obs)));
+                        (this._callback_queue = (_a = this._callback_queue) !== null && _a !== void 0 ? _a : []).push(() => fn(obs, o_1.NoValue));
                     return null;
                 }
                 const observer = o(obs).createObserver(fn);
@@ -1005,6 +1007,20 @@
 
     (function (tf) {
         /**
+         * Transforms to a boolean observable that switches to `true` when
+         * the original `observable` has the same value than `other`.
+         *
+         * `other` may be itself an observable.
+         *
+         * ```tsx
+         * import { o, tf } from 'elt'
+         *
+         * const o_str = o('hello')
+         * const o_is_world = o_str.tf(tf.equals('world'))
+         * // false now
+         * o_str.set('world')
+         * // o_is_world is now true
+         * ```
          * @category observable, toc
          */
         function equals(other) {
@@ -1012,6 +1028,7 @@
         }
         tf.equals = equals;
         /**
+         * Does the opposite of [[tf.equals]]
          * @category observable, toc
          */
         function differs(other) {
@@ -1019,40 +1036,29 @@
         }
         tf.differs = differs;
         /**
-         * @category observable, toc
-         */
-        function is_truthy(val) { return !!val; }
-        tf.is_truthy = is_truthy;
-        /**
-         * @category observable, toc
-         */
-        function is_falsy(val) { return !val; }
-        tf.is_falsy = is_falsy;
-        /**
-         * @category observable, toc
-         */
-        function is_value(val) { return val != null; }
-        tf.is_value = is_value;
-        /**
-         * @category observable, toc
-         */
-        function is_not_value(val) { return val == null; }
-        tf.is_not_value = is_not_value;
-        /**
+         * Transform an observable of array into another array based on either
+         * an array of numbers (which are indices) or a function that takes the
+         * array and returns indices.
+         *
+         * The indices/index function can be itself an observable.
+         *
+         * The resulting observable can have set() called on it.
+         *
+         * This is the basis of [[tf.filter]] and [[tf.array_sort]]
          * @category observable, toc
          */
         function array_transform(fn) {
             return o.tf(fn, fn => {
                 return {
                     indices: [],
-                    get(list) {
+                    transform(list) {
                         if (Array.isArray(fn))
                             this.indices = fn;
                         else
                             this.indices = fn(list);
                         return this.indices.map(i => list[i]);
                     },
-                    set(newval, _, current) {
+                    revert(newval, _, current) {
                         var res = current.slice();
                         for (var i = 0, idx = this.indices; i < idx.length; i++) {
                             res[idx[i]] = newval[i];
@@ -1075,10 +1081,10 @@
             return o.combine(o.tuple(condition, stable), ([cond, stable]) => {
                 return {
                     indices: [],
-                    get(lst, old_val) {
-                        var indices = stable && o.isValue(old_val) ? this.indices : [];
+                    transform(lst, old_val) {
+                        var indices = stable && old_val !== o.NoValue ? this.indices : [];
                         // If the filter is stable, then start adding values at the end if the array changed length
-                        var start = stable && o.isValue(old_val) ? old_val.length : 0;
+                        var start = stable && old_val !== o.NoValue ? old_val.length : 0;
                         // this will only run if the old length is smaller than the new length.
                         for (var i = start, l = lst.length; i < l; i++) {
                             if (cond(lst[i], i, lst))
@@ -1093,7 +1099,7 @@
                         this.indices = indices;
                         return indices.map(i => lst[i]);
                     },
-                    set(newval, _, current) {
+                    revert(newval, _, current) {
                         var res = current.slice();
                         for (var i = 0, idx = this.indices; i < idx.length; i++) {
                             res[idx[i]] = newval[i];
@@ -1109,7 +1115,7 @@
          * @param sortfn
          * @category observable, toc
          */
-        function sort(sortfn) {
+        function array_sort(sortfn) {
             return array_transform(o.tf(sortfn, sortfn => (lst) => {
                 var res = new Array(lst.length);
                 for (var i = 0, l = lst.length; i < l; i++)
@@ -1118,14 +1124,22 @@
                 return res;
             }));
         }
-        tf.sort = sort;
+        tf.array_sort = array_sort;
         /**
          * Sort an array by extractors, given in order of importance.
+         * To sort in descending order, make a tuple with 'desc' as the second argument.
+         *
+         * ```tsx
+         * import { o } from 'elt'
+         *
+         * const o_something = o([{a: 1, b: 'hello'}, {a: 3, b: 'world'}])
+         * const o_sorted = o_something.tf(tf.array_sort_by([t => t.b, [t => t.a, 'desc']]))
+         * ```
          * @param sorters
          * @category observable, toc
          */
-        function sort_by(sorters) {
-            return sort(o.tf(sorters, _sorters => {
+        function array_sort_by(sorters) {
+            return array_sort(o.tf(sorters, _sorters => {
                 var sorters = [];
                 var mult = [];
                 for (var i = 0, l = _sorters.length; i < l; i++) {
@@ -1152,17 +1166,17 @@
                 };
             }));
         }
-        tf.sort_by = sort_by;
+        tf.array_sort_by = array_sort_by;
         /**
          * Group by an extractor function.
          * @category observable, toc
          */
-        function group_by(extractor) {
+        function array_group_by(extractor) {
             return o.tf(extractor, extractor => {
                 return {
                     length: 0,
                     indices: [],
-                    get(lst) {
+                    transform(lst) {
                         var _c;
                         this.length = lst.length;
                         var m = new Map();
@@ -1183,7 +1197,7 @@
                         }
                         return res;
                     },
-                    set(nval) {
+                    revert(nval) {
                         var res = new Array(this.length);
                         var ind = this.indices;
                         for (var i = 0, li = ind.length; i < li; i++) {
@@ -1198,14 +1212,14 @@
                 };
             });
         }
-        tf.group_by = group_by;
+        tf.array_group_by = array_group_by;
         /**
          * Object entries, as returned by Object.keys() and returned as an array of [key, value][]
          * @category observable, toc
          */
         function entries() {
             return {
-                get(item) {
+                transform(item) {
                     var res = [];
                     var keys = Object.keys(item);
                     for (var i = 0, l = keys.length; i < l; i++) {
@@ -1214,7 +1228,7 @@
                     }
                     return res;
                 },
-                set(nval) {
+                revert(nval) {
                     var nres = {};
                     for (var i = 0, l = nval.length; i < l; i++) {
                         var entry = nval[i];
@@ -1231,10 +1245,10 @@
          */
         function map_entries() {
             return {
-                get(item) {
+                transform(item) {
                     return [...item.entries()];
                 },
-                set(nval) {
+                revert(nval) {
                     var nres = new Map();
                     for (var i = 0, l = nval.length; i < l; i++) {
                         var entry = nval[i];
@@ -1246,14 +1260,17 @@
         }
         tf.map_entries = map_entries;
         /**
+         * Make a boolean observable from the presence of given values in a `Set`.
+         * If the observable can be written to, then setting the transformed to `true` will
+         * put all the values to the `Set`, and setting it to `false` will remove all of them.
          *
-         * @param values The values that should be in the set.
+         * The values that should be in the set.
          * @category observable, toc
          */
         function set_has(...values) {
             return o.combine(values, (values) => {
                 return {
-                    get(set) {
+                    transform(set) {
                         for (var i = 0; i < values.length; i++) {
                             var item = values[i];
                             if (!set.has(item))
@@ -1261,7 +1278,7 @@
                         }
                         return true;
                     },
-                    set(newv, _, set) {
+                    revert(newv, _, set) {
                         const res = new Set(set);
                         for (var i = 0; i < values.length; i++) {
                             var item = values[i];
@@ -1432,6 +1449,7 @@
     }
     function _apply_inserted(node) {
         var st = node[sym_mount_status] || 0;
+        node[sym_mount_status] = NODE_IS_INITED | NODE_IS_INSERTED | NODE_IS_OBSERVING; // now inserted
         // init if it was not done
         if (!(st & NODE_IS_INITED))
             _node_call_cbks(node, sym_init);
@@ -1441,7 +1459,6 @@
         // then, call inserted.
         if (!(st & NODE_IS_INSERTED))
             _node_call_cbks(node, sym_inserted);
-        node[sym_mount_status] = NODE_IS_INITED | NODE_IS_INSERTED | NODE_IS_OBSERVING; // now inserted
     }
     /**
      * @internal
@@ -1480,15 +1497,13 @@
      */
     function _apply_removed(node, prev_parent) {
         var st = node[sym_mount_status];
+        node[sym_mount_status] = st ^ NODE_IS_OBSERVING ^ NODE_IS_INSERTED;
         if (st & NODE_IS_OBSERVING) {
             _node_stop_observers(node);
-            st = st ^ NODE_IS_OBSERVING;
         }
         if (st & NODE_IS_INSERTED) {
             _node_call_cbks(node, sym_removed);
-            st = st ^ NODE_IS_INSERTED;
         }
-        node[sym_mount_status] = st;
     }
     /**
      * Traverse the node tree of `node` and call the `removed()` handlers, begininning by the leafs and ending
@@ -1670,10 +1685,10 @@
         if (!(o.isReadonlyObservable(obs))) {
             // If the node is already inited, run the callback
             if (node[sym_mount_status] & NODE_IS_INITED)
-                obsfn(obs, new o.Changes(obs));
+                obsfn(obs, o.NoValue);
             else
                 // otherwise, call it when inited
-                node_on(node, sym_init, () => obsfn(obs, new o.Changes(obs)));
+                node_on(node, sym_init, () => obsfn(obs, o.NoValue));
             return null;
         }
         // Create the observer and append it to the observer array of the node
@@ -1683,6 +1698,16 @@
         node_add_observer(node, obser);
         return obser;
     }
+    /**
+     * Associate an `observer` to a `node`. If the `node` is in the document, then
+     * the `observer` is called as its [[o.Observable]] changes.
+     *
+     * If `node` is removed from the dom, then `observer` is disconnected from
+     * its [[o.Observable]]. This helps in preventing memory leaks for those variables
+     * that `observer` may close on.
+     *
+     * @category low level dom, toc
+     */
     function node_add_observer(node, observer) {
         if (node[sym_observers] == undefined)
             node[sym_observers] = [];
@@ -1768,8 +1793,8 @@
         if (typeof c === 'string' || c.constructor !== Object) {
             // c is an Observable<string>
             node_observe(node, c, (str, chg) => {
-                if (chg.hasOldValue())
-                    _remove_class(node, chg.oldValue());
+                if (chg !== o.NoValue)
+                    _remove_class(node, chg);
                 _apply_class(node, str);
             });
         }
@@ -2040,7 +2065,7 @@
      * <div>
      *   {$props<HTMLDivElement>({dir: 'left'})}
      * </div>
-     * E.$DIV(
+     * E.DIV(
      *   $props({dir: 'left'})
      * )
      * ```
@@ -2109,7 +2134,7 @@
      *   <div class={['class1', o_cls, {class3: o_bool}]}>
      *     content 2
      *   </div>
-     *   {E.$DIV(
+     *   {E.DIV(
      *     $class('class1', o_cls, {class3: o_bool}),
      *     'content 3'
      *   )}
@@ -2146,7 +2171,7 @@
      *
      * ```tsx
      * <MyComponent>{$title('Some title ! It generally appears on hover.')}</MyComponent>
-     * E.$DIV(
+     * E.DIV(
      *   $title('hello there !')
      * )
      * ```
@@ -2162,7 +2187,7 @@
      *
      * ```tsx
      * const o_width = o('321px')
-     * E.$DIV(
+     * E.DIV(
      *   $style({width: o_width, flex: '1'})
      * )
      * ```
@@ -2436,7 +2461,7 @@
             node_remove_mixin(this.node, this);
             this.node = null; // we force the node to null to help with garbage collection.
         }
-        listen(name, listener, useCapture) {
+        on(name, listener, useCapture) {
             if (typeof name === 'string')
                 this.node.addEventListener(name, (ev) => listener(ev), useCapture);
             else
@@ -2450,11 +2475,12 @@
      *
      * It is just a Mixin that has a `render()` method and that defines the `attrs`
      * property which will restrict what attributes the component can be created with.
-     * All attributes must extend the base `Attrs` class.
+     *
+     * All attributes **must** extend the base `Attrs` class.
      * @category dom, toc
      */
     class Component extends Mixin {
-        // attrs: Attrs
+        /** @internal */
         constructor(attrs) {
             super();
             this.attrs = attrs;
@@ -2499,432 +2525,6 @@
             mixin.stopObservers();
         }
     }
-
-    /**
-     * Control structures to help with readability.
-     */
-    /**
-     * A subclass of `#Verb` made to store nodes between two comments.
-     *
-     * Can be used as a base to build verbs more easily.
-     * @category dom, toc
-     */
-    var cmt_count = 0;
-    class CommentContainer extends Mixin {
-        constructor() {
-            super(...arguments);
-            this.end = document.createComment(`-- ${this.constructor.name} ${cmt_count++} --`);
-        }
-        init(node) {
-            node.parentNode.insertBefore(this.end, node.nextSibling);
-        }
-        /**
-         * Remove all nodes between this.start and this.node
-         */
-        clear() {
-            if (this.end.previousSibling !== this.node)
-                node_remove_after(this.node, this.end.previousSibling);
-        }
-        setContents(cts) {
-            this.clear();
-            // Insert the new comment before the end
-            if (cts)
-                insert_before_and_init(this.node.parentNode, cts, this.end);
-        }
-    }
-    /**
-     * Displays and actualises the content of an Observable containing
-     * Node, string or number into the DOM.
-     */
-    class Displayer extends CommentContainer {
-        constructor(_obs) {
-            super();
-            this._obs = _obs;
-        }
-        init(node) {
-            super.init(node);
-            this.observe(this._obs, value => this.setContents(e.renderable_to_node(value)));
-        }
-    }
-    /**
-     * Write and update the string value of an observable value into
-     * a Text node.
-     *
-     * This verb is used whenever an observable is passed as a child to a node.
-     *
-     * ```tsx
-     * import { o, $Display, Fragment as $ } from 'elt'
-     *
-     * const o_text = o('text')
-     * document.body.appendChild(<$>
-     *   {o_text} is the same as {$Display(o_text)}
-     * </$>)
-     * ```
-     *
-     * @category low level dom, toc
-     */
-    function Display(obs) {
-        if (!(obs instanceof o.Observable)) {
-            return e.renderable_to_node(obs, true);
-        }
-        return e(document.createComment('$Display'), new Displayer(obs));
-    }
-    /**
-     * @category dom, toc
-     *
-     * Display content depending on the value of a `condition`, which can be an observable.
-     *
-     * If `condition` is not an observable, then the call to `If` is resolved immediately without using
-     * an intermediary observable.
-     *
-     * If `condition` is readonly, then the observables given to `display` and `display_otherwise` are
-     * Readonly as well.
-     *
-     * For convenience, the truth value is given typed as a `o.Observable<NonNullable<...>>` in `display`,
-     * since there is no way `null` or `undefined` could make their way here.
-     *
-     * ```tsx
-     * // o_obj is nullable.
-     * const o_obj = o({a: 'hello'} as {a: string} | null)
-     *
-     * If(o_obj,
-     *   // o_truthy here is o.Observable<{a: string}>
-     *   // which is why we can safely use .p('a') without typescript complaining
-     *   o_truthy => <>{o_truthy.p('a')}
-     * )
-     * ```
-     *
-     * ```tsx
-     *  import { o, If, $click } from 'elt'
-     *
-     *  const o_some_obj = o({prop: 'value!'} as {prop: string} | null)
-     *
-     *  document.body.appendChild(<div>
-     *    <h1>An If example</h1>
-     *    <div><button>
-     *     {$click(() => {
-     *       o_some_obj.mutate(v => !!v ? null : {prop: 'clicked'})
-     *     })}
-     *     Inverse
-     *   </button></div>
-     *   {If(o_some_obj,
-     *     // Here, o_truthy is of type Observable<{prop: string}>, without the null
-     *     // We can thus safely take its property, which is a Renderable (string), through the .p() method.
-     *     o_truthy => <div>We have a {o_truthy.p('prop')}</div>,
-     *     () => <div>Value is null</div>
-     *   )}
-     *  </div>)
-     * ```
-     */
-    function If(condition, display, display_otherwise) {
-        // ts bug on condition.
-        if (typeof display === 'function' && !(condition instanceof o.Observable)) {
-            return condition ?
-                e.renderable_to_node(display(condition), true)
-                : e.renderable_to_node(display_otherwise ?
-                    (display_otherwise(null))
-                    : document.createComment('false'), true);
-        }
-        return e(document.createComment('If'), new If.ConditionalDisplayer(display, condition, display_otherwise));
-    }
-    (function (If) {
-        /**
-         * Implementation of the `DisplayIf()` verb.
-         * @internal
-         */
-        class ConditionalDisplayer extends Displayer {
-            constructor(display, condition, display_otherwise) {
-                super(condition.tf((cond, old, v) => {
-                    if (old !== o.NOVALUE && !!cond === !!old && v !== o.NOVALUE)
-                        return v;
-                    if (cond) {
-                        return display(condition);
-                    }
-                    else if (display_otherwise) {
-                        return display_otherwise(condition);
-                    }
-                    else {
-                        return null;
-                    }
-                }));
-                this.display = display;
-                this.condition = condition;
-                this.display_otherwise = display_otherwise;
-            }
-        }
-        If.ConditionalDisplayer = ConditionalDisplayer;
-    })(If || (If = {}));
-    /**
-     * @category dom, toc
-     *
-     * Repeats the `render` function for each element in `ob`, optionally separating each rendering
-     * with the result of the `separator` function.
-     *
-     * If `ob` is an observable, `Repeat` will update the generated nodes to match the changes.
-     * If it is a `o.ReadonlyObservable`, then the `render` callback will be provided a read only observable.
-     *
-     * `ob` is not converted to an observable if it was not one, in which case the results are executed
-     * right away and only once.
-     *
-     * ```tsx
-     * import { o, Repeat, $click } from 'elt'
-     *
-     * const o_mylist = o(['hello', 'world'])
-     *
-     * document.body.appendChild(<div>
-     *   {Repeat(
-     *      o_mylist,
-     *      o_item => <button>
-     *        {$click(ev => o_item.mutate(value => value + '!'))}
-     *        {o_item}
-     *      </button>,
-     *      () => ', '
-     *   )}
-     * </div>)
-     * ```
-     */
-    function Repeat(ob, render, separator) {
-        if (!(ob instanceof o.Observable)) {
-            const arr = ob;
-            var df = document.createDocumentFragment();
-            for (var i = 0, l = arr.length; i < l; i++) {
-                df.appendChild(e.renderable_to_node(render(arr[i], i), true));
-                if (i > 1 && separator) {
-                    df.appendChild(e.renderable_to_node(separator(i - 1), true));
-                }
-            }
-            return df;
-        }
-        return e(document.createComment('Repeat'), new Repeat.Repeater(ob, render, separator));
-    }
-    (function (Repeat) {
-        /**
-         *  Repeats content.
-         * @internal
-         */
-        class Repeater extends Mixin {
-            constructor(ob, renderfn, separator) {
-                super();
-                this.renderfn = renderfn;
-                this.separator = separator;
-                this.positions = [];
-                this.next_index = 0;
-                this.lst = [];
-                this.child_obs = [];
-                this.obs = o(ob);
-            }
-            init() {
-                this.observe(this.obs, lst => {
-                    this.lst = lst || [];
-                    const diff = lst.length - this.next_index;
-                    if (diff < 0)
-                        this.removeChildren(-diff);
-                    if (diff > 0)
-                        this.appendChildren(diff);
-                });
-            }
-            /**
-             * Generate the next element to append to the list.
-             */
-            next(fr) {
-                if (this.next_index >= this.lst.length)
-                    return false;
-                // here, we *KNOW* it represents a defined value.
-                var ob = this.obs.p(this.next_index);
-                this.child_obs.push(ob);
-                if (this.separator && this.next_index > 0) {
-                    var sep = e.renderable_to_node(this.separator(this.next_index));
-                    if (sep)
-                        fr.appendChild(sep);
-                }
-                var node = e.renderable_to_node(this.renderfn(ob, this.next_index), true);
-                this.positions.push(node instanceof DocumentFragment ? node.lastChild : node);
-                fr.appendChild(node);
-                this.next_index++;
-                return true;
-            }
-            appendChildren(count) {
-                var _a;
-                const parent = this.node.parentNode;
-                if (!parent)
-                    return;
-                const insert_point = this.positions.length === 0 ? this.node.nextSibling : (_a = this.positions[this.positions.length - 1]) === null || _a === void 0 ? void 0 : _a.nextSibling;
-                var fr = document.createDocumentFragment();
-                while (count-- > 0) {
-                    if (!this.next(fr))
-                        break;
-                }
-                insert_before_and_init(parent, fr, insert_point);
-            }
-            removeChildren(count) {
-                var _a;
-                if (this.next_index === 0 || count === 0)
-                    return;
-                // Détruire jusqu'à la position concernée...
-                this.next_index = this.next_index - count;
-                node_remove_after((_a = this.positions[this.next_index - 1]) !== null && _a !== void 0 ? _a : this.node, this.positions[this.positions.length - 1]);
-                this.child_obs = this.child_obs.slice(0, this.next_index);
-                this.positions = this.positions.slice(0, this.next_index);
-            }
-        }
-        Repeat.Repeater = Repeater;
-    })(Repeat || (Repeat = {}));
-    /**
-     * Similarly to `Repeat`, `RepeatScroll` repeats the `render` function for each element in `ob`,
-     * optionally separated by the results of `separator`, until the elements overflow past the
-     * bottom border of the current parent marked `overflow-y: auto`.
-     *
-     * As the user scrolls, new items are being added. Old items are *not* discarded and stay above.
-     *
-     * It will generate `scroll_buffer_size` elements at a time (or 10 if not specified), waiting for
-     * the next repaint with `requestAnimationFrame()` between chunks.
-     *
-     * Unlike `Repeat`, `RepeatScroll` turns `ob` into an `Observable` internally even if it wasn't one.
-     *
-     * > **Note** : while functional, RepeatScroll is not perfect. A "VirtualScroll" behaviour is in the
-     * > roadmap to only maintain the right amount of elements on screen.
-     *
-     * ```tsx
-     * @include ../examples/repeatscroll.tsx
-     * ```
-     *
-     * @category dom, toc
-     */
-    function RepeatScroll(ob, render, options = {}) {
-        // we cheat the typesystem, which is not great, but we know what we're doing.
-        return e(document.createComment('RepeatScroll'), new RepeatScroll.ScrollRepeater(o(ob), render, options));
-    }
-    (function (RepeatScroll) {
-        /**
-         * Repeats content and append it to the DOM until a certain threshold
-         * is meant. Use it with `scrollable()` on the parent..
-         * @internal
-         */
-        class ScrollRepeater extends Repeat.Repeater {
-            constructor(ob, renderfn, options) {
-                var _a, _b;
-                super(ob, renderfn);
-                this.options = options;
-                this.parent = null;
-                this.scroll_buffer_size = (_a = this.options.scroll_buffer_size) !== null && _a !== void 0 ? _a : 10;
-                this.threshold_height = (_b = this.options.threshold_height) !== null && _b !== void 0 ? _b : 500;
-                this.separator = this.options.separator;
-                this.onscroll = () => {
-                    if (!this.parent)
-                        return;
-                    this.appendChildren();
-                };
-            }
-            /**
-             * Append `count` children if the parent was not scrollable (just like Repeater),
-             * or append elements until we've added past the bottom of the container.
-             */
-            appendChildren() {
-                if (!this.parent)
-                    // if we have no scrollable parent (yet, if just inited), then just append items
-                    return super.appendChildren(this.scroll_buffer_size);
-                // Instead of appending all the count, break it down to bufsize packets.
-                const bufsize = this.scroll_buffer_size;
-                const p = this.parent;
-                const append = () => {
-                    if (this.next_index < this.lst.length && p.scrollHeight - (p.clientHeight + p.scrollTop) < this.threshold_height) {
-                        super.appendChildren(bufsize);
-                        requestAnimationFrame(append);
-                    }
-                };
-                // We do not try appending immediately ; some observables may modify current
-                // items height right after this function ends, which can lead to a situation
-                // where we had few elements that were very high and went past the threshold
-                // that would get very small suddenly, but since they didn't get the chance
-                // to do that, append stops because it is past the threshold right now and
-                // thus leaves a lot of blank space.
-                requestAnimationFrame(append);
-            }
-            inserted() {
-                // do not process this if the node is not inserted.
-                if (!this.node.isConnected)
-                    return;
-                // Find parent with the overflow-y
-                var iter = this.node.parentElement;
-                while (iter) {
-                    var style = getComputedStyle(iter);
-                    if (style.overflowY === 'auto' || style.msOverflowY === 'auto' || style.msOverflowY === 'scrollbar') {
-                        this.parent = iter;
-                        break;
-                    }
-                    iter = iter.parentElement;
-                }
-                if (!this.parent) {
-                    console.warn(`Scroll repeat needs a parent with overflow-y: auto`);
-                    this.appendChildren();
-                    return;
-                }
-                this.parent.addEventListener('scroll', this.onscroll);
-                this.observe(this.obs, lst => {
-                    this.lst = lst || [];
-                    const diff = lst.length - this.next_index;
-                    if (diff < 0)
-                        this.removeChildren(-diff);
-                    if (diff > 0)
-                        this.appendChildren();
-                });
-            }
-            removed() {
-                // remove Scrolling
-                if (!this.parent)
-                    return;
-                this.parent.removeEventListener('scroll', this.onscroll);
-                this.parent = null;
-            }
-        }
-        RepeatScroll.ScrollRepeater = ScrollRepeater;
-    })(RepeatScroll || (RepeatScroll = {}));
-    function Switch(obs) {
-        return new Switch.Switcher(obs);
-    }
-    (function (Switch) {
-        /**
-         * Used by the `Switch()` verb.
-         * @internal
-         */
-        class Switcher extends o.CombinedObservable {
-            constructor(obs) {
-                super([obs]);
-                this.obs = obs;
-                this.cases = [];
-                this.passthrough = () => null;
-                this.prev_case = null;
-                this.prev = '';
-            }
-            getter([nval]) {
-                const cases = this.cases;
-                for (var c of cases) {
-                    const val = c[0];
-                    if (val === nval || (typeof val === 'function' && val(nval))) {
-                        if (this.prev_case === val) {
-                            return this.prev;
-                        }
-                        this.prev_case = val;
-                        const fn = c[1];
-                        return (this.prev = fn(this.obs));
-                    }
-                }
-                if (this.prev_case === this.passthrough)
-                    return this.prev;
-                this.prev_case = this.passthrough;
-                return (this.prev = this.passthrough ? this.passthrough() : null);
-            }
-            Case(value, fn) {
-                this.cases.push([value, fn]);
-                return this;
-            }
-            Else(fn) {
-                this.passthrough = fn;
-                return this;
-            }
-        }
-        Switch.Switcher = Switcher;
-    })(Switch || (Switch = {}));
 
     ////////////////////////////////////////////////////////
     const SVG = "http://www.w3.org/2000/svg";
@@ -2984,6 +2584,85 @@
         use: SVG,
         view: SVG,
     };
+    var cmt_count = 0;
+    /**
+     * A [[Mixin]] made to store nodes between two comments.
+     *
+     * Can be used as a base to build verbs more easily.
+     * @category dom, toc
+     */
+    class CommentContainer extends Mixin {
+        constructor() {
+            super(...arguments);
+            /** The Comment marking the end of the node handled by this Mixin */
+            this.end = document.createComment(`-- ${this.constructor.name} ${cmt_count++} --`);
+        }
+        /** @internal */
+        init(node) {
+            node.parentNode.insertBefore(this.end, node.nextSibling);
+        }
+        /**
+         * Remove all nodes between this.start and this.node
+         */
+        clear() {
+            if (this.end.previousSibling !== this.node)
+                node_remove_after(this.node, this.end.previousSibling);
+        }
+        /**
+         * Update the contents between `this.node` and `this.end` with `cts`. `cts` may be
+         * a `DocumentFragment`.
+         */
+        setContents(cts) {
+            this.clear();
+            // Insert the new comment before the end
+            if (cts)
+                insert_before_and_init(this.node.parentNode, cts, this.end);
+        }
+    }
+    /**
+     * Displays and actualises the content of an Observable containing
+     * Node, string or number into the DOM.
+     *
+     * This is the class that is used whenever an observable is used as
+     * a child.
+     */
+    class Displayer extends CommentContainer {
+        /**
+         * The `Displayer` expects `Renderable` values.
+         */
+        constructor(_obs) {
+            super();
+            this._obs = _obs;
+        }
+        /** @internal */
+        init(node) {
+            super.init(node);
+            this.observe(this._obs, value => this.setContents(e.renderable_to_node(value)));
+        }
+    }
+    /**
+     * Write and update the string value of an observable value into
+     * a Text node.
+     *
+     * This verb is used whenever an observable is passed as a child to a node.
+     *
+     * ```tsx
+     * import { o, $Display, Fragment as $ } from 'elt'
+     *
+     * const o_text = o('text')
+     * document.body.appendChild(<$>
+     *   {o_text} is the same as {$Display(o_text)}
+     * </$>)
+     * ```
+     *
+     * @category low level dom, toc
+     */
+    function Display(obs) {
+        if (!(obs instanceof o.Observable)) {
+            return e.renderable_to_node(obs, true);
+        }
+        return e(document.createComment('$Display'), new Displayer(obs));
+    }
     function isComponent(kls) {
         return kls.prototype instanceof Component;
     }
@@ -3075,6 +2754,20 @@
     const $ = Fragment;
     (function (e) {
         /**
+         * Implement this property on any object to be able to insert it as a node
+         * child. The signature it implements is `() => Renderable`.
+         *
+         * ```tsx
+         * @include ../examples/e.sym_render.tsx
+         * ```
+         */
+        e.sym_render = Symbol('renderable');
+        /** @internal */
+        function is_renderable_object(c) {
+            return c && c[e.sym_render];
+        }
+        e.is_renderable_object = is_renderable_object;
+        /**
          * Separates decorators and mixins from nodes or soon-to-be-nodes from children.
          * Returns a tuple containing the decorators/mixins/attrs in one part and the children in the other.
          * The resulting arrays are 1-dimensional and do not contain null or undefined.
@@ -3088,7 +2781,7 @@
                 if (Array.isArray(c)) {
                     separate_children_from_rest(c, attrs, decorators, mixins, chld);
                 }
-                else if (c instanceof Node || typeof c === 'string' || typeof c === 'number' || o.isReadonlyObservable(c)) {
+                else if (c instanceof Node || typeof c === 'string' || typeof c === 'number' || o.isReadonlyObservable(c) || is_renderable_object(c)) {
                     chld.push(c);
                 }
                 else if (typeof c === 'function') {
@@ -3123,8 +2816,12 @@
                 }
                 return df;
             }
-            else
+            else if (is_renderable_object(r)) {
+                return r[e.sym_render]();
+            }
+            else {
                 return r;
+            }
         }
         e.renderable_to_node = renderable_to_node;
         /**
@@ -3422,6 +3119,366 @@
         window.E = e;
     }
 
+    /**
+     * Control structures to help with readability.
+     */
+    /**
+     * @category dom, toc
+     *
+     * Display content depending on the value of a `condition`, which can be an observable.
+     *
+     * If `condition` is not an observable, then the call to `If` is resolved immediately without using
+     * an intermediary observable.
+     *
+     * If `condition` is readonly, then the observables given to `display` and `display_otherwise` are
+     * Readonly as well.
+     *
+     * For convenience, the truth value is given typed as a `o.Observable<NonNullable<...>>` in `display`,
+     * since there is no way `null` or `undefined` could make their way here.
+     *
+     * ```tsx
+     * // o_obj is nullable.
+     * const o_obj = o({a: 'hello'} as {a: string} | null)
+     *
+     * If(o_obj,
+     *   // o_truthy here is o.Observable<{a: string}>
+     *   // which is why we can safely use .p('a') without typescript complaining
+     *   o_truthy => <>{o_truthy.p('a')}
+     * )
+     * ```
+     *
+     * ```tsx
+     *  import { o, If, $click } from 'elt'
+     *
+     *  const o_some_obj = o({prop: 'value!'} as {prop: string} | null)
+     *
+     *  document.body.appendChild(<div>
+     *    <h1>An If example</h1>
+     *    <div><button>
+     *     {$click(() => {
+     *       o_some_obj.mutate(v => !!v ? null : {prop: 'clicked'})
+     *     })}
+     *     Inverse
+     *   </button></div>
+     *   {If(o_some_obj,
+     *     // Here, o_truthy is of type Observable<{prop: string}>, without the null
+     *     // We can thus safely take its property, which is a Renderable (string), through the .p() method.
+     *     o_truthy => <div>We have a {o_truthy.p('prop')}</div>,
+     *     () => <div>Value is null</div>
+     *   )}
+     *  </div>)
+     * ```
+     */
+    function If(condition, display, display_otherwise) {
+        // ts bug on condition.
+        if (typeof display === 'function' && !(condition instanceof o.Observable)) {
+            return condition ?
+                e.renderable_to_node(display(condition), true)
+                : e.renderable_to_node(display_otherwise ?
+                    (display_otherwise(null))
+                    : document.createComment('false'), true);
+        }
+        return e(document.createComment('If'), new If.ConditionalDisplayer(display, condition, display_otherwise));
+    }
+    (function (If) {
+        /**
+         * Implementation of the `DisplayIf()` verb.
+         * @internal
+         */
+        class ConditionalDisplayer extends Displayer {
+            constructor(display, condition, display_otherwise) {
+                super(condition.tf((cond, old, v) => {
+                    if (old !== o.NoValue && !!cond === !!old && v !== o.NoValue)
+                        return v;
+                    if (cond) {
+                        return display(condition);
+                    }
+                    else if (display_otherwise) {
+                        return display_otherwise(condition);
+                    }
+                    else {
+                        return null;
+                    }
+                }));
+                this.display = display;
+                this.condition = condition;
+                this.display_otherwise = display_otherwise;
+            }
+        }
+        If.ConditionalDisplayer = ConditionalDisplayer;
+    })(If || (If = {}));
+    /**
+     * @category dom, toc
+     *
+     * Repeats the `render` function for each element in `ob`, optionally separating each rendering
+     * with the result of the `separator` function.
+     *
+     * If `ob` is an observable, `Repeat` will update the generated nodes to match the changes.
+     * If it is a `o.ReadonlyObservable`, then the `render` callback will be provided a read only observable.
+     *
+     * `ob` is not converted to an observable if it was not one, in which case the results are executed
+     * right away and only once.
+     *
+     * ```tsx
+     * import { o, Repeat, $click } from 'elt'
+     *
+     * const o_mylist = o(['hello', 'world'])
+     *
+     * document.body.appendChild(<div>
+     *   {Repeat(
+     *      o_mylist,
+     *      o_item => <button>
+     *        {$click(ev => o_item.mutate(value => value + '!'))}
+     *        {o_item}
+     *      </button>,
+     *      () => ', '
+     *   )}
+     * </div>)
+     * ```
+     */
+    function Repeat(ob, render, separator) {
+        if (!(ob instanceof o.Observable)) {
+            const arr = ob;
+            var df = document.createDocumentFragment();
+            for (var i = 0, l = arr.length; i < l; i++) {
+                df.appendChild(e.renderable_to_node(render(arr[i], i), true));
+                if (i > 1 && separator) {
+                    df.appendChild(e.renderable_to_node(separator(i - 1), true));
+                }
+            }
+            return df;
+        }
+        return e(document.createComment('Repeat'), new Repeat.Repeater(ob, render, separator));
+    }
+    (function (Repeat) {
+        /**
+         *  Repeats content.
+         * @internal
+         */
+        class Repeater extends Mixin {
+            constructor(ob, renderfn, separator) {
+                super();
+                this.renderfn = renderfn;
+                this.separator = separator;
+                this.positions = [];
+                this.next_index = 0;
+                this.lst = [];
+                this.child_obs = [];
+                this.obs = o(ob);
+            }
+            init() {
+                this.observe(this.obs, lst => {
+                    this.lst = lst || [];
+                    const diff = lst.length - this.next_index;
+                    if (diff < 0)
+                        this.removeChildren(-diff);
+                    if (diff > 0)
+                        this.appendChildren(diff);
+                });
+            }
+            /**
+             * Generate the next element to append to the list.
+             */
+            next(fr) {
+                if (this.next_index >= this.lst.length)
+                    return false;
+                // here, we *KNOW* it represents a defined value.
+                var ob = this.obs.p(this.next_index);
+                this.child_obs.push(ob);
+                if (this.separator && this.next_index > 0) {
+                    var sep = e.renderable_to_node(this.separator(this.next_index));
+                    if (sep)
+                        fr.appendChild(sep);
+                }
+                var node = e.renderable_to_node(this.renderfn(ob, this.next_index), true);
+                this.positions.push(node instanceof DocumentFragment ? node.lastChild : node);
+                fr.appendChild(node);
+                this.next_index++;
+                return true;
+            }
+            appendChildren(count) {
+                var _a;
+                const parent = this.node.parentNode;
+                if (!parent)
+                    return;
+                const insert_point = this.positions.length === 0 ? this.node.nextSibling : (_a = this.positions[this.positions.length - 1]) === null || _a === void 0 ? void 0 : _a.nextSibling;
+                var fr = document.createDocumentFragment();
+                while (count-- > 0) {
+                    if (!this.next(fr))
+                        break;
+                }
+                insert_before_and_init(parent, fr, insert_point);
+            }
+            removeChildren(count) {
+                var _a;
+                if (this.next_index === 0 || count === 0)
+                    return;
+                // Détruire jusqu'à la position concernée...
+                this.next_index = this.next_index - count;
+                node_remove_after((_a = this.positions[this.next_index - 1]) !== null && _a !== void 0 ? _a : this.node, this.positions[this.positions.length - 1]);
+                this.child_obs = this.child_obs.slice(0, this.next_index);
+                this.positions = this.positions.slice(0, this.next_index);
+            }
+        }
+        Repeat.Repeater = Repeater;
+    })(Repeat || (Repeat = {}));
+    /**
+     * Similarly to `Repeat`, `RepeatScroll` repeats the `render` function for each element in `ob`,
+     * optionally separated by the results of `separator`, until the elements overflow past the
+     * bottom border of the current parent marked `overflow-y: auto`.
+     *
+     * As the user scrolls, new items are being added. Old items are *not* discarded and stay above.
+     *
+     * It will generate `scroll_buffer_size` elements at a time (or 10 if not specified), waiting for
+     * the next repaint with `requestAnimationFrame()` between chunks.
+     *
+     * Unlike `Repeat`, `RepeatScroll` turns `ob` into an `Observable` internally even if it wasn't one.
+     *
+     * > **Note** : while functional, RepeatScroll is not perfect. A "VirtualScroll" behaviour is in the
+     * > roadmap to only maintain the right amount of elements on screen.
+     *
+     * ```tsx
+     * @include ../examples/repeatscroll.tsx
+     * ```
+     *
+     * @category dom, toc
+     */
+    function RepeatScroll(ob, render, options = {}) {
+        // we cheat the typesystem, which is not great, but we know what we're doing.
+        return e(document.createComment('RepeatScroll'), new RepeatScroll.ScrollRepeater(o(ob), render, options));
+    }
+    (function (RepeatScroll) {
+        /**
+         * Repeats content and append it to the DOM until a certain threshold
+         * is meant. Use it with `scrollable()` on the parent..
+         * @internal
+         */
+        class ScrollRepeater extends Repeat.Repeater {
+            constructor(ob, renderfn, options) {
+                var _a, _b;
+                super(ob, renderfn);
+                this.options = options;
+                this.parent = null;
+                this.scroll_buffer_size = (_a = this.options.scroll_buffer_size) !== null && _a !== void 0 ? _a : 10;
+                this.threshold_height = (_b = this.options.threshold_height) !== null && _b !== void 0 ? _b : 500;
+                // Have to type this manually since dts-bundler chokes on Renderable
+                this.separator = this.options.separator;
+                this.onscroll = () => {
+                    if (!this.parent)
+                        return;
+                    this.appendChildren();
+                };
+            }
+            /**
+             * Append `count` children if the parent was not scrollable (just like Repeater),
+             * or append elements until we've added past the bottom of the container.
+             */
+            appendChildren() {
+                if (!this.parent)
+                    // if we have no scrollable parent (yet, if just inited), then just append items
+                    return super.appendChildren(this.scroll_buffer_size);
+                // Instead of appending all the count, break it down to bufsize packets.
+                const bufsize = this.scroll_buffer_size;
+                const p = this.parent;
+                const append = () => {
+                    if (this.next_index < this.lst.length && p.scrollHeight - (p.clientHeight + p.scrollTop) < this.threshold_height) {
+                        super.appendChildren(bufsize);
+                        requestAnimationFrame(append);
+                    }
+                };
+                // We do not try appending immediately ; some observables may modify current
+                // items height right after this function ends, which can lead to a situation
+                // where we had few elements that were very high and went past the threshold
+                // that would get very small suddenly, but since they didn't get the chance
+                // to do that, append stops because it is past the threshold right now and
+                // thus leaves a lot of blank space.
+                requestAnimationFrame(append);
+            }
+            inserted() {
+                // do not process this if the node is not inserted.
+                if (!this.node.isConnected)
+                    return;
+                // Find parent with the overflow-y
+                var iter = this.node.parentElement;
+                while (iter) {
+                    var style = getComputedStyle(iter);
+                    if (style.overflowY === 'auto' || style.msOverflowY === 'auto' || style.msOverflowY === 'scrollbar') {
+                        this.parent = iter;
+                        break;
+                    }
+                    iter = iter.parentElement;
+                }
+                if (!this.parent) {
+                    console.warn(`Scroll repeat needs a parent with overflow-y: auto`);
+                    this.appendChildren();
+                    return;
+                }
+                this.parent.addEventListener('scroll', this.onscroll);
+                this.observe(this.obs, lst => {
+                    this.lst = lst || [];
+                    const diff = lst.length - this.next_index;
+                    if (diff < 0)
+                        this.removeChildren(-diff);
+                    if (diff > 0)
+                        this.appendChildren();
+                });
+            }
+            removed() {
+                // remove Scrolling
+                if (!this.parent)
+                    return;
+                this.parent.removeEventListener('scroll', this.onscroll);
+                this.parent = null;
+            }
+        }
+        RepeatScroll.ScrollRepeater = ScrollRepeater;
+    })(RepeatScroll || (RepeatScroll = {}));
+    function Switch(obs) {
+        return new Switch.Switcher(obs);
+    }
+    (function (Switch) {
+        /**
+         * @internal
+         */
+        class Switcher extends o.CombinedObservable {
+            constructor(obs) {
+                super([obs]);
+                this.obs = obs;
+                this.cases = [];
+                this.passthrough = () => null;
+                this.prev_case = null;
+                this.prev = '';
+            }
+            getter([nval]) {
+                const cases = this.cases;
+                for (var c of cases) {
+                    const val = c[0];
+                    if (val === nval || (typeof val === 'function' && val(nval))) {
+                        if (this.prev_case === val) {
+                            return this.prev;
+                        }
+                        this.prev_case = val;
+                        const fn = c[1];
+                        return (this.prev = fn(this.obs));
+                    }
+                }
+                if (this.prev_case === this.passthrough)
+                    return this.prev;
+                this.prev_case = this.passthrough;
+                return (this.prev = this.passthrough ? this.passthrough() : null);
+            }
+            Case(value, fn) {
+                this.cases.push([value, fn]);
+                return this;
+            }
+            Else(fn) {
+                this.passthrough = fn;
+                return this;
+            }
+        }
+        Switch.Switcher = Switcher;
+    })(Switch || (Switch = {}));
+
     var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -3675,11 +3732,11 @@
          * Display an App that depends on this one, displaying `view_name` as its main view
          * and activating the service classes passed in `services`.
          *
-         * Services in the child app that require other services will query this app if their app
-         * does not have the service defined and use it if found. Otherwise, they will instanciate
-         * their own version.
+         * Services in the child app that require other services will query the parent [[App]] first. If the
+         * parent does not have the service, then the child app is queried. If the service does not exist, the
+         * child app instanciates its own version.
          *
-         * Activated services in a child app are instanciated even if they already exist
+         * Activated services through `this.app.activate` in a child app are instanciated even if they already exist
          * in the parent app.
          *
          * ```tsx
@@ -3772,8 +3829,11 @@
             constructor(app) {
                 super();
                 this.app = app;
-                /** @internal */
-                this._service_init_promise = null;
+                /**
+                 * A promise that is resolved once the service's `init()` has been called.
+                 * Used
+                 */
+                this.init_promise = null;
                 /** @internal */
                 this._requirements = new Set();
             }
@@ -3783,14 +3843,14 @@
              */
             _init() {
                 return __awaiter(this, void 0, void 0, function* () {
-                    if (this._service_init_promise) {
-                        yield this._service_init_promise;
+                    if (this.init_promise) {
+                        yield this.init_promise;
                         return;
                     }
                     // This is where we wait for all the required services to end their init.
                     // Now we can init.
-                    this._service_init_promise = Promise.all([...this._requirements].map(b => b._init())).then(() => this.init());
-                    yield this._service_init_promise;
+                    this.init_promise = Promise.all([...this._requirements].map(b => b._init())).then(() => this.init());
+                    yield this.init_promise;
                     this.startObservers();
                 });
             }

@@ -67,6 +67,10 @@ const p = e.$DIV()
       text: initialCode,
       // theme: 'sandbox-dark',
       acquireTypes: false,
+      monacoSettings: {
+        fontFamily: '"Oxygen Mono", monospace',
+        fontSize: 16
+      },
       compilerOptions: {
         target: 5,
         strict: true,
@@ -102,6 +106,7 @@ declare global {
 
     sdb.monaco.editor.defineTheme('eltdoc', {
       base: 'vs-dark',
+
       inherit: true,
       rules: [
         { token: 'elt-function-call', foreground: '8080dd'},
@@ -131,6 +136,8 @@ wd.addEventListener('keydown', ev => {
     reload()
   }
 }, true)
+
+
 // wd.style.display = 'none'
 
 const examples = Array.from(document.getElementsByTagName('pre'))
@@ -184,7 +191,7 @@ function h(elt, ...children) {
 
 function reload() {
   sandbox.getRunnableJS().then(code => {
-    console.log(code.split(/\n/g).map((l, i) => `${i + 1}: ${l}`).join('\n'))
+    // console.log(code.split(/\n/g).map((l, i) => `${i + 1}: ${l}`).join('\n'))
     mkiframe(code)
   })
 }
