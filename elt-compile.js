@@ -17,110 +17,119 @@ window.addEventListener('load', function () {
 })
 
 
-// First set up the VSCode loader in a script tag
-const getLoaderScript = document.createElement('script')
-// getLoaderScript.src = 'https://www.typescriptlang.org/v2/js/vs.loader.js'
-getLoaderScript.src = './loader.js'
-getLoaderScript.src = './monaco/vs/loader.js'
-getLoaderScript.async = true
-getLoaderScript.onload = () => {
-  // Now the loader is ready, tell require where it can get the version of monaco, and the sandbox
-  // This version uses the latest version of the sandbox, which is used on the TypeScript website
+var _sandbox = null
+function getSandbox() {
+  if (_sandbox) return _sandbox
+  _sandbox = new Promise((accept, reject) => {
+    // First set up the VSCode loader in a script tag
+    const getLoaderScript = document.createElement('script')
+    // getLoaderScript.src = 'https://www.typescriptlang.org/v2/js/vs.loader.js'
+    getLoaderScript.src = './loader.js'
+    getLoaderScript.src = './monaco/vs/loader.js'
+    getLoaderScript.async = true
+    getLoaderScript.onload = () => {
+      // Now the loader is ready, tell require where it can get the version of monaco, and the sandbox
+      // This version uses the latest version of the sandbox, which is used on the TypeScript website
 
-  // For the monaco version you can use MaxCDN or the TypeSCript web infra CDN
-  // You can see the available releases for TypeScript here:
-  // https://typescript.azureedge.net/indexes/releases.json
-  //
-  require.config({
-    paths: {
-      // vs: 'https://typescript.azureedge.net/cdn/3.7.3/monaco/min/vs',
-      vs: './monaco/vs',
-      // sandbox: 'https://www.typescriptlang.org/v2/js/sandbox',
-      sandbox: './sandbox',
-    },
-    // This is something you need for monaco to work
-    ignoreDuplicateModules: ['vs/editor/editor.main'],
-  })
+      // For the monaco version you can use MaxCDN or the TypeSCript web infra CDN
+      // You can see the available releases for TypeScript here:
+      // https://typescript.azureedge.net/indexes/releases.json
+      //
+      require.config({
+        paths: {
+          // vs: 'https://typescript.azureedge.net/cdn/3.7.3/monaco/min/vs',
+          vs: './monaco/vs',
+          // sandbox: 'https://www.typescriptlang.org/v2/js/sandbox',
+          sandbox: './sandbox',
+        },
+        // This is something you need for monaco to work
+        ignoreDuplicateModules: ['vs/editor/editor.main'],
+      })
 
-  // Grab a copy of monaco, TypeScript and the sandbox
-  require(['vs/editor/editor.main', 'vs/language/typescript/tsWorker', 'sandbox/index', 'sandbox/theme'], (
-    main,
-    _tsWorker,
-    sandbox,
-    theme
-  ) => {
-    const initialCode = `import { e } from "elt"
-const p = e.$DIV()
-`
+      // Grab a copy of monaco, TypeScript and the sandbox
+      require(['vs/editor/editor.main', 'vs/language/typescript/tsWorker', 'sandbox/index', 'sandbox/theme'], (
+        main,
+        _tsWorker,
+        sandbox,
+        theme
+      ) => {
+        const initialCode = `import { e } from "elt"
+    const p = e.$DIV()
+    `
 
-    const isOK = main && window.ts && sandbox
-    if (isOK) {
-      // ??
-    } else {
-      console.error('Could not get all the dependencies of sandbox set up!')
-      console.error('main', !!main, 'ts', !!window.ts, 'sandbox', !!sandbox)
-      return
+        const isOK = main && window.ts && sandbox
+        if (isOK) {
+          // ??
+        } else {
+          console.error('Could not get all the dependencies of sandbox set up!')
+          console.error('main', !!main, 'ts', !!window.ts, 'sandbox', !!sandbox)
+          return
+        }
+
+        // Create a sandbox and embed it into the the div #monaco-editor-embed
+        const sandboxConfig = {
+          text: initialCode,
+          // theme: 'sandbox-dark',
+          acquireTypes: false,
+          monacoSettings: {
+            fontFamily: '"Oxygen Mono", monospace',
+            fontSize: 16
+          },
+          compilerOptions: {
+            target: 5,
+            strict: true,
+            lib: ["es6", "dom"],
+            jsx: 2,
+            jsxFactory: "E",
+            module: 1, // amd // https://github.com/microsoft/monaco-typescript/blob/master/src/monaco.d.ts
+            types: ["elt"]
+          },
+          domID: 'st-playground',
+        }
+
+        // has getText() and setText()
+        var sdb = sandbox.createTypeScriptSandbox(sandboxConfig, main, window.ts)
+
+        var service = sdb.languageServiceDefaults
+        // extra libraries
+
+        service.addExtraLib(
+          document.getElementById('elt-d-ts').innerText + `
+    declare global {
+      function demo_display(...a: Renderable[]): void
+      function DemoBtn(attrs: Attrs<HTMLButtonElement> & {do: (a?: any) => any}, chld: Renderable[]): HTMLButtonElement
+    }
+          `,
+          'file:///node_modules/elt/index.d.ts'
+        );
+
+        // sdb.updateCompilerSetting('')
+        sdb.updateCompilerSetting('jsxFactory', 'E')
+        sdb.updateCompilerSetting('target', 5)
+        sdb.updateCompilerSetting('module', 1)
+
+        sdb.monaco.editor.defineTheme('eltdoc', {
+          base: 'vs-dark',
+
+          inherit: true,
+          rules: [
+            { token: 'elt-function-call', foreground: '8080dd'},
+            { token: 'metatag.content', foreground: 'ddaaaa', fontStyle: 'italic' },
+            { token: 'attribute.name', foreground: 'dd8080' }
+          ]
+        })
+        sdb.monaco.editor.setTheme('eltdoc')
+
+        // console.log(sdb)
+        accept(sdb)
+      })
     }
 
-    // Create a sandbox and embed it into the the div #monaco-editor-embed
-    const sandboxConfig = {
-      text: initialCode,
-      // theme: 'sandbox-dark',
-      acquireTypes: false,
-      monacoSettings: {
-        fontFamily: '"Oxygen Mono", monospace',
-        fontSize: 16
-      },
-      compilerOptions: {
-        target: 5,
-        strict: true,
-        lib: ["es6", "dom"],
-        jsx: 2,
-        jsxFactory: "E",
-        module: 1, // amd // https://github.com/microsoft/monaco-typescript/blob/master/src/monaco.d.ts
-        types: ["elt"]
-      },
-      domID: 'st-playground',
-    }
+    document.body.appendChild(getLoaderScript)
 
-    // has getText() and setText()
-    var sdb = window.sandbox = sandbox.createTypeScriptSandbox(sandboxConfig, main, window.ts)
-
-    var service = sdb.languageServiceDefaults
-    // extra libraries
-
-    service.addExtraLib(
-      document.getElementById('elt-d-ts').innerText + `
-declare global {
-  function demo_display(...a: Renderable[]): void
-  function DemoBtn(attrs: Attrs<HTMLButtonElement> & {do: (a?: any) => any}, chld: Renderable[]): HTMLButtonElement
-}
-      `,
-      'file:///node_modules/elt/index.d.ts'
-    );
-
-    // sdb.updateCompilerSetting('')
-    sdb.updateCompilerSetting('jsxFactory', 'E')
-    sdb.updateCompilerSetting('target', 5)
-    sdb.updateCompilerSetting('module', 1)
-
-    sdb.monaco.editor.defineTheme('eltdoc', {
-      base: 'vs-dark',
-
-      inherit: true,
-      rules: [
-        { token: 'elt-function-call', foreground: '8080dd'},
-        { token: 'metatag.content', foreground: 'ddaaaa', fontStyle: 'italic' },
-        { token: 'attribute.name', foreground: 'dd8080' }
-      ]
-    })
-    sdb.monaco.editor.setTheme('eltdoc')
-
-    // console.log(sdb)
   })
+  return _sandbox
 }
-
-document.body.appendChild(getLoaderScript)
 
 const wd = document.getElementById('st-playground-overlay')
 wd.addEventListener('click', ev => {
@@ -150,10 +159,12 @@ for (let e of examples) {
     e,
     h('button', '▶ Run Example', btn => {
       btn.addEventListener('click', ev => {
-        sandbox.setText(e.innerText)
-        reload()
-        wd.style.display = 'flex'
-        sandbox.editor.layout() // force repaint of monaco window
+        getSandbox().then(sandbox => {
+          sandbox.setText(e.innerText)
+          reload()
+          wd.style.display = 'flex'
+          sandbox.editor.layout() // force repaint of monaco window
+        })
       })
     })
   )
@@ -190,7 +201,9 @@ function h(elt, ...children) {
 }
 
 function reload() {
-  sandbox.getRunnableJS().then(code => {
+  getSandbox().then(sandbox => {
+    return sandbox.getRunnableJS()
+  }).then(code => {
     // console.log(code.split(/\n/g).map((l, i) => `${i + 1}: ${l}`).join('\n'))
     mkiframe(code)
   })
