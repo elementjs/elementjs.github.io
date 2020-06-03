@@ -82,6 +82,7 @@ pre > code {
 }
 
 a > code {
+  font-size: 0.9em;
   color: rgba(var(--st-class), 1);
   text-decoration: underline;
 }
@@ -135,13 +136,15 @@ blockquote > :last-child {
 }
 
 .st-block .st-kind {
-  position: absolute;
+  /* position: absolute; */
   font-weight: bolder;
-  padding: 0 4px;
-  left: 0;
-  transform: translateX(calc(-100% - 8px));
-  color: rgba(255, 255, 255, 1);
-  background-color: rgba(var(--st-primary), 0.5);
+  /* padding: 0 4px; */
+  margin-right: 0.5em;
+  font-size: 0.9em;
+  /* left: 0; */
+  /* transform: translateX(calc(-100% - 8px)); */
+  /* color: rgba(255, 255, 255, 1); */
+  /* background-color: rgba(var(--st-primary), 0.5); */
   border-radius: 2px;
 }
 
