@@ -525,7 +525,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
      </span><span class="token punctuation">{</span>$bind<span class="token punctuation">.</span><span class="token function">boolean</span><span class="token punctuation">(</span>o_bool<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>input</span><span class="token punctuation">></span></span> <span class="token operator">-</span> <span class="token punctuation">{</span>o_bool<span class="token punctuation">.</span><span class="token function">tf</span><span class="token punctuation">(</span><span class="token parameter">b</span> <span class="token operator">=></span> b <span class="token operator">?</span> <span class="token string">'true'</span> <span class="token operator">:</span> <span class="token string">'false'</span><span class="token punctuation">)</span><span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$bind.contenteditable" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$bind.contenteditable</b><!-- If --><!-- /If -->(
   <!-- Repeat --><span class=""><b>obs</b>: <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span>string</span><!-- end repeat -->&gt;<!-- /If --></a></span>,
@@ -541,7 +540,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span> <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token punctuation">{</span>whiteSpace<span class="token operator">:</span> <span class="token string">'pre-wrap'</span><span class="token punctuation">}</span><span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>o_contents<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">></span></span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$bind.date" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$bind.date</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>obs</b>: <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span class="st-type"><!-- Repeat --><a href="#Date">Date<!-- If --><!-- /If --></a> | <span>null</span><!-- end repeat --></span><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <a href="#HTMLInputElement">HTMLInputElement<!-- If --><!-- /If --></a></span><!-- end repeat -->) =&lt; <span>void</span></span></div><div class="st-doc"><p>Bind bidirectionnally a <code>Date | null</code> observable to an <code>input</code>. Will only work on inputs
 type <code>&quot;date&quot;</code> <code>&quot;datetime&quot;</code> <code>&quot;datetime-local&quot;</code>.</p>
@@ -555,7 +553,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
      </span><span class="token punctuation">{</span>$bind<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>o_date<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>input</span><span class="token punctuation">></span></span> <span class="token operator">-</span> <span class="token punctuation">{</span>o_date<span class="token punctuation">.</span><span class="token function">tf</span><span class="token punctuation">(</span><span class="token parameter">d</span> <span class="token operator">=></span> d <span class="token operator">?</span> dtf<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token string">'null'</span><span class="token punctuation">)</span><span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$bind.number" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$bind.number</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>obs</b>: <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span>number</span><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <a href="#HTMLInputElement">HTMLInputElement<!-- If --><!-- /If --></a></span><!-- end repeat -->) =&lt; <span>void</span></span></div><div class="st-doc"><p>Bind a number observable to an &lt;input type=&quot;number&quot;/&gt;. Most likely won't work on anything else
 and will set the value to <code>NaN</code>.</p>
@@ -568,7 +565,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
     </span><span class="token punctuation">{</span>$bind<span class="token punctuation">.</span><span class="token function">number</span><span class="token punctuation">(</span>o_number<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>input</span><span class="token punctuation">></span></span> <span class="token operator">/</span> <span class="token punctuation">{</span>o_number<span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$bind.selected_index" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$bind.selected_index</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>obs</b>: <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span>number</span><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <a href="#HTMLSelectElement">HTMLSelectElement<!-- If --><!-- /If --></a></span><!-- end repeat -->) =&lt; <span>void</span></span></div><div class="st-doc"><p>Bind a number observable to the selected index of a select element</p>
 <pre class='language-tsx'><code><span class="token keyword">import</span> <span class="token punctuation">{</span> o<span class="token punctuation">,</span> $bind<span class="token punctuation">,</span> Fragment <span class="token keyword">as</span> $ <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'elt'</span>
@@ -583,7 +579,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">></span></span><span class="token plain-text">three</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">></span></span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span> <span class="token operator">/</span> <span class="token punctuation">{</span>o_selected<span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$bind.string" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$bind.string</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>obs</b>: <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span>string</span><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <span class="st-type"><!-- Repeat --><a href="#HTMLInputElement">HTMLInputElement<!-- If --><!-- /If --></a> | <a href="#HTMLTextAreaElement">HTMLTextAreaElement<!-- If --><!-- /If --></a><!-- end repeat --></span></span><!-- end repeat -->) =&lt; <span>void</span></span></div><div class="st-doc"><p>Bind an observable to an input's value.</p>
 <pre class='language-tsx'><code><span class="token keyword">import</span> <span class="token punctuation">{</span> o<span class="token punctuation">,</span> $bind<span class="token punctuation">,</span> Fragment <span class="token keyword">as</span> $ <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'elt'</span>
@@ -595,7 +590,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
     </span><span class="token punctuation">{</span>$bind<span class="token punctuation">.</span><span class="token function">string</span><span class="token punctuation">(</span>o_string<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>input</span><span class="token punctuation">></span></span> <span class="token operator">/</span> <span class="token punctuation">{</span>o_string<span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$class" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$class</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Element">Element<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class="optional"><b>...clss</b>?: <span><a href="#ClassDefinition">ClassDefinition<!-- If --><!-- /If --></a>[]</span></span><!-- end repeat -->): <span>(node: N) =&gt; void</span></div><div class="st-doc"><p>Observe one or several class definition, where a class definition is either</p>
 <ul>
@@ -647,7 +641,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
     <span class="token string">'content 3'</span>
   <span class="token punctuation">)</span><span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$click" data-categories="dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>$click</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <span class="st-type"><!-- Repeat --><a href="#HTMLElement">HTMLElement<!-- If --><!-- /If --></a> | <a href="#SVGElement">SVGElement<!-- If --><!-- /If --></a><!-- end repeat --></span><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(
   <!-- Repeat --><span class=""><b>cbk</b>: <a href="#Listener">Listener<!-- If -->&lt;<!-- Repeat --><a href="#MouseEvent">MouseEvent<!-- If --><!-- /If --></a>, <a href="#N">N<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a></span>,
@@ -662,7 +655,6 @@ device.</p>
 <span class="token punctuation">}</span><span class="token plain-text">
 
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">MyComponent</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span><span class="token function">$id</span><span class="token punctuation">(</span><span class="token string">'some-id'</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">MyComponent</span></span><span class="token punctuation">></span></span><span class="token plain-text">
-
 </span></code></pre>
 <blockquote>
 <p><strong>Note</strong>: You can use the <code>id</code> attribute on any element, be them Components or regular nodes, as it is forwarded.</p>
@@ -699,7 +691,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
   <span class="token punctuation">{</span><span class="token function">If</span><span class="token punctuation">(</span>o_is_inside<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> the_div<span class="token punctuation">)</span><span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$inserted" data-categories="dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>$inserted</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Node">Node<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>fn</b>: <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <a href="#N">N<!-- If --><!-- /If --></a></span>, <span class=""><b>parent</b>: <a href="#Node">Node<!-- If --><!-- /If --></a></span><!-- end repeat -->) =&lt; <span>void</span></span></span><!-- end repeat -->): <span>(node: N) =&gt; void</span></div><div class="st-doc"><p>Call the <code>fn</code> callback when the decorated <code>node</code> is inserted into the DOM with
 itself as first argument and its parent as the second.</p>
@@ -724,7 +715,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$on" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$on</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Element">Element<!-- If --><!-- /If --></a><!-- /If --></span>, <span>K<!-- If --> extends <span><span>(<span>typeof DocumentEventMap</span>)</span>[]</span><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(
   <!-- Repeat --><span class=""><b>name</b>: <a href="#K">K<!-- If --><!-- /If --></a></span>,
@@ -751,7 +741,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
      <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$props" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$props</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Node">Node<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>props</b>: <span>{ [<span>k<!-- If --> in <span>typeof N</span><!-- /If --></span>]?: <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span><a href="#N">N<!-- If --><!-- /If --></a>[<a href="#k">k<!-- If --><!-- /If --></a>]</span><!-- end repeat -->&gt;<!-- /If --></a> }</span></span><!-- end repeat -->): <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <a href="#N">N<!-- If --><!-- /If --></a></span><!-- end repeat -->) =&lt; <span>void</span></span></div><div class="st-doc"><p>Modify object properties of the current Node.</p>
 <p>Unfortunately, TSX does not pick up on the correct node type here. It however works without having
@@ -764,7 +753,6 @@ to type with regular js calls.</p>
 E.DIV(
   $props</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">HTMLDivElement</span></span><span class="token punctuation">></span></span><span class="token plain-text">(</span><span class="token punctuation">{</span>dir<span class="token operator">:</span> <span class="token string">'left'</span><span class="token punctuation">}</span><span class="token plain-text">)
 )
-
 </span></code></pre>
 </div></div><div class="st-block" id="$removed" data-categories="dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>$removed</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Node">Node<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>fn</b>: <span class="st-type">(<!-- Repeat --><span class=""><b>node</b>: <a href="#N">N<!-- If --><!-- /If --></a></span>, <span class=""><b>parent</b>: <a href="#Node">Node<!-- If --><!-- /If --></a></span><!-- end repeat -->) =&lt; <span>void</span></span></span><!-- end repeat -->): <span>(node: N) =&gt; void</span></div><div class="st-doc"><p>Run a callback when the node is removed from its holding document, with <code>node</code>
 as the node being removed and <code>parent</code> with its previous parent.</p>
@@ -779,7 +767,6 @@ trigger the ugly scroll band on mobile devices.</p>
 <span class="token constant">E</span><span class="token punctuation">.</span><span class="token constant">DIV</span><span class="token punctuation">(</span>
   <span class="token function">$style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>width<span class="token operator">:</span> o_width<span class="token punctuation">,</span> flex<span class="token operator">:</span> <span class="token string">'1'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="$title" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>$title</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#HTMLElement">HTMLElement<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>title</b>: <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span>string</span><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <span>(node: N) =&gt; void</span></div><div class="st-doc"><p>Update a node's title with a potentially observable value.
 Used mostly when dealing with components since their base node attributes are no longer available.</p>
@@ -885,7 +872,6 @@ in the parent app.</p>
 <span class="token punctuation">}</span>
 
 document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>App<span class="token punctuation">.</span><span class="token function">DisplayApp</span><span class="token punctuation">(</span><span class="token string">'Main'</span><span class="token punctuation">,</span> InitService<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="App#activate" data-categories="" data-tags=""><div class="st-name st-kind-function"><b>activate</b><!-- If --><!-- /If -->(<!-- Repeat --><span class="optional"><b>...new_services</b>?: <span><span class="st-type">{ <!-- Repeat --><!-- end repeat --> <!-- Repeat --><!-- end repeat --> }</span>[]</span></span><!-- end repeat -->): <span>void</span></div><div class="st-doc"><p>Activate services to change the application's state.</p>
 <p>See <a href="#App.view"><code>App.view()</code></a> for an example.</p>
@@ -923,7 +909,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
 <span class="token punctuation">}</span>
 
 document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>App<span class="token punctuation">.</span><span class="token function">DisplayApp</span><span class="token punctuation">(</span><span class="token string">'Main'</span><span class="token punctuation">,</span> RootService<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="App#o_active_services" data-categories="" data-tags=""><div class="st-kind-var"><div class="st-name"><span class="st-kind"></span><span class=""><b>o_active_services</b>: <span><a href="#o.Observable">Observable</a>&lt;<!-- Repeat --><span><a href="#Set">Set</a>&lt;<!-- Repeat --><span><a href="#App.Service">Service</a></span><!-- end repeat -->&gt;</span><!-- end repeat -->&gt;</span></span></div></div><div class="st-doc"><p>The currently active services, ie. the services that were specifically
 given to <a href="##App.DisplayApp"><code>#App.DisplayApp</code></a> or <a href="#App#activate"><code>App#activate</code></a></p>
@@ -949,7 +934,6 @@ the <code>main_view</code> view.</p>
 document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>
   App<span class="token punctuation">.</span><span class="token function">DisplayApp</span><span class="token punctuation">(</span><span class="token string">'Main'</span><span class="token punctuation">,</span> LoginService<span class="token punctuation">)</span>
 <span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="App.Service" data-categories="app,toc" data-tags="category"><div class="st-name st-kind-class"><b>class App.Service</b><!-- If --><!-- /If --> <!-- If -->extends <!-- Repeat --><span><a href="#o.ObserverHolder">ObserverHolder</a></span><!-- end repeat --><!-- /If --> <!-- If --><!-- /If --></div><div class="st-doc"><p>A base class to make application services.</p>
 <p>A service defines views through <code>this.view</code> and reacts to</p>
@@ -1041,7 +1025,6 @@ contents.</p>
 <span class="token punctuation">}</span>
 
 document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>App<span class="token punctuation">.</span><span class="token function">DisplayApp</span><span class="token punctuation">(</span><span class="token string">'Main'</span><span class="token punctuation">,</span> InitService<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="Attrs" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-interface"><b>interface Attrs</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Node">Node<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --><!-- If --> extends <!-- Repeat --><span><a href="#EmptyAttributes">EmptyAttributes</a>&lt;<!-- Repeat --><span>N</span><!-- end repeat -->&gt;</span><!-- end repeat --><!-- /If --></div><div class="st-doc"><p>Basic attributes used on all HTML nodes, which can be reused when making components
 to benefit from the class / style / id... attributes defined here.</p>
@@ -1058,7 +1041,6 @@ document.body.appendChild(</span><span class="token tag"><span class="token tag"
   <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>css_class_1<span class="token punctuation">'</span></span>
   <span class="token attr-name">some_attribute</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>World !<span class="token punctuation">'</span></span>
 <span class="token punctuation">></span></span><span class="token plain-text">Hello </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">MyComponent</span></span><span class="token punctuation">></span></span><span class="token plain-text">)
-
 </span></code></pre>
 <p>This type should be used as first argument to all components definitions.</p>
 </div><div class="st-nest"><div class="st-block" id="Attrs#class" data-categories="" data-tags=""><div class="st-kind-var"><div class="st-name"><span class="st-kind"></span><span class=""><b>class?</b>: <span class="st-type"><!-- Repeat --><a href="#ClassDefinition">ClassDefinition<!-- If --><!-- /If --></a> | <span><a href="#ClassDefinition">ClassDefinition<!-- If --><!-- /If --></a>[]</span><!-- end repeat --></span></span></div></div><div class="st-doc"><p>Class definition(s), see <a href="#$class"><code>$class()</code></a> for possible uses</p>
@@ -1069,7 +1051,6 @@ document.body.appendChild(</span><span class="token tag"><span class="token tag"
 
 <span class="token keyword">type</span> At <span class="token operator">=</span> Attrs<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">HTMLDivElement</span></span><span class="token punctuation">></span></span><span class="token plain-text">
 type No = AttrsNodeType</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">At</span></span><span class="token punctuation">></span></span><span class="token plain-text">
-
 </span></code></pre>
 </div></div><div class="st-block" id="ClassDefinition" data-categories="" data-tags=""><div class="st-name st-kind-typealias"><b>type ClassDefinition</b><!-- If --><!-- /If --> = <span class="st-type"><!-- Repeat --><span class="st-type">{ <!-- Repeat -->[<span>string</span>]: <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span>any</span><!-- end repeat -->&gt;<!-- /If --></a><!-- end repeat --> <!-- Repeat --><!-- end repeat --> }</span> | <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span>string</span><!-- end repeat -->&gt;<!-- /If --></a><!-- end repeat --></span></div><div class="st-doc"><p>CSS classes for the class={} attribute</p>
 </div></div><div class="st-block" id="CommentContainer" data-categories="dom,toc" data-tags="category"><div class="st-name st-kind-class"><b>class CommentContainer</b><!-- If --><!-- /If --> <!-- If -->extends <!-- Repeat --><span><a href="#Mixin">Mixin</a>&lt;<!-- Repeat --><span><a href="#Comment">Comment</a></span><!-- end repeat -->&gt;</span><!-- end repeat --><!-- /If --> <!-- If --><!-- /If --></div><div class="st-doc"><p>A <a href="#Mixin"><code>Mixin</code></a> made to store nodes between two comments.</p>
@@ -1099,7 +1080,6 @@ a Text node.</p>
 document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>$<span class="token operator">></span>
   <span class="token punctuation">{</span>o_text<span class="token punctuation">}</span> <span class="token keyword">is</span> the same <span class="token keyword">as</span> <span class="token punctuation">{</span><span class="token function">Display</span><span class="token punctuation">(</span>o_text<span class="token punctuation">)</span><span class="token punctuation">}</span>
 <span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="Displayer" data-categories="" data-tags=""><div class="st-name st-kind-class"><b>class Displayer</b><!-- If --><!-- /If --> <!-- If -->extends <!-- Repeat --><span><a href="#CommentContainer">CommentContainer</a></span><!-- end repeat --><!-- /If --> <!-- If --><!-- /If --></div><div class="st-doc"><p>Displays and actualises the content of an Observable containing
 Node, string or number into the DOM.</p>
@@ -1151,7 +1131,6 @@ since there is no way <code>null</code> or <code>undefined</code> could make the
   <span class="token comment">// which is why we can safely use .p('a') without typescript complaining</span>
   <span class="token parameter">o_truthy</span> <span class="token operator">=></span> <span class="token operator">&lt;</span>$<span class="token operator">></span><span class="token punctuation">{</span>o_truthy<span class="token punctuation">.</span><span class="token function">p</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span>
 <span class="token punctuation">)</span>
-
 </code></pre>
 <pre class='language-tsx'><code><span class="token keyword">import</span> <span class="token punctuation">{</span> o<span class="token punctuation">,</span> If<span class="token punctuation">,</span> $click <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'elt'</span>
 
@@ -1172,7 +1151,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
    <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">Value is null</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
  <span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="If.NonNullableRO" data-categories="" data-tags="code"><div class="st-name st-kind-typealias"><b>type If.NonNullableRO</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --> = <span class="st-type"><a href="#T">T<!-- If --><!-- /If --></a> extends <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span>infer U</span><!-- end repeat -->&gt;<!-- /If --></a> ? <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><a href="#NonNullable">NonNullable<!-- If -->&lt;<!-- Repeat --><a href="#U">U<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a> : <span class="st-type"><a href="#T">T<!-- If --><!-- /If --></a> extends <a href="#o.ReadonlyObservable">o.ReadonlyObservable<!-- If -->&lt;<!-- Repeat --><span>infer U</span><!-- end repeat -->&gt;<!-- /If --></a> ? <a href="#o.ReadonlyObservable">o.ReadonlyObservable<!-- If -->&lt;<!-- Repeat --><a href="#NonNullable">NonNullable<!-- If -->&lt;<!-- Repeat --><a href="#U">U<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a> : <a href="#NonNullable">NonNullable<!-- If -->&lt;<!-- Repeat --><a href="#T">T<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a></span></span></div><div class="st-doc"><p>Get the type of a potentially <code>Observable</code> type where <code>null</code> and <code>undefined</code> are exluded, keeping
 the <code>Readonly</code> status if the provided <a href="#o.Observable"><code>o.Observable</code></a> type was <code>Readonly</code>.</p>
@@ -1181,7 +1159,6 @@ the <code>Readonly</code> status if the provided <a href="#o.Observable"><code>o
 <span class="token keyword">type</span> <span class="token constant">A</span> <span class="token operator">=</span> If<span class="token punctuation">.</span>NonNullableRO<span class="token operator">&lt;</span>o<span class="token punctuation">.</span>Observable<span class="token operator">&lt;</span><span class="token builtin">string</span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token operator">>></span> <span class="token comment">// -> o.Observable&lt;string></span>
 <span class="token keyword">type</span> <span class="token constant">B</span> <span class="token operator">=</span> If<span class="token punctuation">.</span>NonNullableRO<span class="token operator">&lt;</span>o<span class="token punctuation">.</span><span class="token constant">RO</span><span class="token operator">&lt;</span><span class="token builtin">number</span> <span class="token operator">|</span> <span class="token keyword">undefined</span> <span class="token operator">|</span> <span class="token keyword">null</span><span class="token operator">>></span> <span class="token comment">// -> o.ReadonlyObservable&lt;number> | number</span>
 <span class="token keyword">type</span> <span class="token constant">C</span> <span class="token operator">=</span> If<span class="token punctuation">.</span>NonNullableRO<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>string</span><span class="token punctuation">></span></span><span class="token plain-text"> // -> string
-
 </span></code></pre>
 </div></div><div class="st-block" id="Insertable" data-categories="dom,toc" data-tags="category"><div class="st-name st-kind-typealias"><b>type Insertable</b><!-- If -->&lt;<!-- Repeat --><span>N<!-- If --> extends <a href="#Node">Node<!-- If --><!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --> = <span class="st-type"><!-- Repeat --><a href="#Mixin">Mixin<!-- If -->&lt;<!-- Repeat --><a href="#N">N<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a> | <a href="#Decorator">Decorator<!-- If -->&lt;<!-- Repeat --><a href="#N">N<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a> | <a href="#Renderable">Renderable<!-- If --><!-- /If --></a> | <span><a href="#Insertable">Insertable<!-- If -->&lt;<!-- Repeat --><a href="#N">N<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a>[]</span><!-- end repeat --></span></div><div class="st-doc"><p>The Insertable type describes the types that elt can append to a Node.
 Anything of the Insertable type can be put <code>&lt;tag&gt;between braces {'!'}&lt;/tag&gt;</code>.</p>
@@ -1215,7 +1192,6 @@ var div = </span><span class="token tag"><span class="token tag"><span class="to
   </span><span class="token punctuation">{</span><span class="token keyword">new</span> <span class="token class-name">MyMixinWorks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
   </span><span class="token punctuation">{</span><span class="token keyword">new</span> <span class="token class-name">MyMixinFails</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">
-
 </span></code></pre>
 </div><div class="st-nest"><div class="st-block" id="Mixin#init" data-categories="" data-tags=""><div class="st-name st-kind-function"><b>init</b><!-- If --><!-- /If -->(
   <!-- Repeat --><span class=""><b>node</b>: <a href="#N">N<!-- If --><!-- /If --></a></span>,
@@ -1258,7 +1234,6 @@ document.body.appendChild(E.DIV(
   'Click Me !',
   new MyMixin(),
 ))
-
 </span></code></pre>
 </div></div><div class="st-block" id="Mixin#removeFromNode" data-categories="" data-tags=""><div class="st-name st-kind-function"><b>removeFromNode</b><!-- If --><!-- /If -->(<!-- Repeat --><!-- end repeat -->): <span>void</span></div><div class="st-doc"><p>Remove the mixin from this node. Observers created with <code>this.observe()</code> will
 stop observing. The <code>this.removed</code> method <strong>will not</strong> be called.</p>
@@ -1312,7 +1287,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
      <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">', '</span>
   <span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="Repeat.RoItem" data-categories="" data-tags="code"><div class="st-name st-kind-typealias"><b>type Repeat.RoItem</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --> extends <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span><span>any</span>[]</span><!-- end repeat -->&gt;<!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --> = <span class="st-type"><a href="#T">T<!-- If --><!-- /If --></a> extends <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><span><span>(<span>infer U</span>)</span>[]</span><!-- end repeat -->&gt;<!-- /If --></a> ? <a href="#o.Observable">o.Observable<!-- If -->&lt;<!-- Repeat --><a href="#U">U<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a> : <span class="st-type"><a href="#T">T<!-- If --><!-- /If --></a> extends <a href="#o.ReadonlyObservable">o.ReadonlyObservable<!-- If -->&lt;<!-- Repeat --><span><span>(<span>infer U</span>)</span>[]</span><!-- end repeat -->&gt;<!-- /If --></a> ? <a href="#o.ReadonlyObservable">o.ReadonlyObservable<!-- If -->&lt;<!-- Repeat --><a href="#U">U<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a> : <span class="st-type"><a href="#T">T<!-- If --><!-- /If --></a> extends <span><span>(<span>infer U</span>)</span>[]</span> ? <a href="#U">U<!-- If --><!-- /If --></a> : <a href="#T">T<!-- If --><!-- /If --></a></span></span></span></div><div class="st-doc"><p>A helper type that transforms a type that could be an array, an <a href="#o.Observable"><code>o.Observable</code></a> or a <a href="#o.ReadonlyObservable"><code>o.ReadonlyObservable</code></a>
 of an array to the base type of the same type.</p>
@@ -1324,7 +1298,6 @@ of an array to the base type of the same type.</p>
 <span class="token keyword">type</span> <span class="token constant">B</span> <span class="token operator">=</span> Repeat<span class="token punctuation">.</span>RoItem<span class="token operator">&lt;</span>o<span class="token punctuation">.</span>Observable<span class="token operator">&lt;</span><span class="token punctuation">(</span><span class="token builtin">string</span> <span class="token operator">|</span> <span class="token builtin">number</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">>></span>
 <span class="token comment">// o.ReadonlyObservable&lt;Date></span>
 <span class="token keyword">type</span> <span class="token constant">C</span> <span class="token operator">=</span> Repeat<span class="token punctuation">.</span>RoItem<span class="token operator">&lt;</span>o<span class="token punctuation">.</span>ReadonlyObservable<span class="token operator">&lt;</span>Date<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">>></span>
-
 </code></pre>
 </div></div><div class="st-block" id="RepeatScroll" data-categories="dom,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>RepeatScroll</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --> extends <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span><span>any</span>[]</span><!-- end repeat -->&gt;<!-- /If --></a><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(
   <!-- Repeat --><span class=""><b>ob</b>: <a href="#T">T<!-- If --><!-- /If --></a></span>,
@@ -1354,7 +1327,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
     </span><span class="token punctuation">{</span>o_item<span class="token punctuation">}</span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="RepeatScroll.Options" data-categories="" data-tags=""><div class="st-name st-kind-interface"><b>interface RepeatScroll.Options</b><!-- If --><!-- /If --><!-- If --><!-- /If --></div><div class="st-doc"><p>Options to <a href="#RepeatScroll"><code>RepeatScroll()</code></a></p>
 </div><div class="st-nest"><div class="st-block" id="RepeatScroll.Options#scroll_buffer_size" data-categories="" data-tags=""><div class="st-kind-var"><div class="st-name"><span class="st-kind"></span><span class=""><b>scroll_buffer_size?</b>: <span>number</span></span></div></div><div class="st-doc"><p>The number of elements to generate at the same time between <code>requestAnimationFrame</code> calls.</p>
@@ -1374,7 +1346,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
    <span class="token punctuation">.</span><span class="token function">Else</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token operator">&lt;</span>$<span class="token operator">></span>Something <span class="token keyword">else</span> entirely<span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span class="token punctuation">)</span>
-
 </code></pre>
 <p><code>Switch()</code> can work with typeguards to narrow a type in the observable passed to the then callback,
 but only with defined functions. It is however not as powerful as typescript's type guards in ifs
@@ -1389,7 +1360,6 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
   <span class="token punctuation">.</span><span class="token function">Case</span><span class="token punctuation">(</span><span class="token string">'hey'</span><span class="token punctuation">,</span> <span class="token parameter">o_obs2</span> <span class="token operator">=></span> <span class="token string">'hello'</span><span class="token punctuation">)</span> <span class="token comment">// also, o_obs2 is now Observable&lt;string></span>
                  <span class="token comment">// since number has been taken care of.</span>
   <span class="token punctuation">.</span><span class="token function">Else</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>$<span class="token operator">></span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="append_child_and_init" data-categories="low level dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>append_child_and_init</b><!-- If --><!-- /If -->(
   <!-- Repeat --><span class=""><b>parent</b>: <a href="#Node">Node<!-- If --><!-- /If --></a></span>,
@@ -1482,7 +1452,6 @@ var n = </span><span class="token tag"><span class="token tag"><span class="toke
 
 var d = </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">/></span></span><span class="token plain-text">
 node_add_mixin(d, my_mixin);
-
 </span></code></pre>
 </div></div><div class="st-block" id="node_add_observer" data-categories="low level dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>node_add_observer</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(
   <!-- Repeat --><span class=""><b>node</b>: <a href="#Node">Node<!-- If --><!-- /If --></a></span>,
@@ -1539,7 +1508,6 @@ have been forced to another value by a third party.</p>
 <span class="token keyword">var</span> node2 <span class="token operator">=</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">
   </span><span class="token punctuation">{</span><span class="token function">$inserted</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">node<span class="token punctuation">,</span> parent</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'inserted'</span><span class="token punctuation">,</span> node<span class="token punctuation">,</span> <span class="token string">'onto'</span><span class="token punctuation">,</span> parent<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-
 </code></pre>
 </div></div><div class="st-block" id="node_remove_after" data-categories="low level dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>node_remove_after</b><!-- If --><!-- /If -->(
   <!-- Repeat --><span class=""><b>start</b>: <a href="#Node">Node<!-- If --><!-- /If --></a></span>,
@@ -1629,7 +1597,6 @@ o_key<span class="token punctuation">.</span><span class="token keyword">set</sp
 <span class="token keyword">const</span> o_base_2 <span class="token operator">=</span> <span class="token function">o</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment">// Observable&lt;number[]></span>
 <span class="token keyword">const</span> o_base_2_item <span class="token operator">=</span> o_base_2<span class="token punctuation">.</span><span class="token function">p</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment">// Observable&lt;number></span>
 <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>o_base_2_item<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="o.Observable#removeObserver" data-categories="" data-tags=""><div class="st-name st-kind-function"><b>removeObserver</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>ob</b>: <a href="#o.Observer">Observer<!-- If -->&lt;<!-- Repeat --><a href="#A">A<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <span>void</span></div><div class="st-doc"><p>Remove an observer from this observable. This means the Observer will not
 be called anymore when this Observable changes.</p>
@@ -1654,7 +1621,6 @@ o_obs<span class="token punctuation">.</span><span class="token keyword">set</sp
 <span class="token comment">// This may be fixed in the futured, but right now we have to type them.</span>
 <span class="token keyword">const</span> o_transformed_2 <span class="token operator">=</span> o_obs<span class="token punctuation">.</span><span class="token function">tf</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token function-variable function">transform</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">v<span class="token punctuation">,</span> _<span class="token punctuation">,</span> _2</span><span class="token punctuation">)</span> <span class="token operator">=></span> v <span class="token operator">*</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token function-variable function">revert</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">v<span class="token operator">:</span> <span class="token builtin">number</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> v <span class="token operator">/</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
 o_transformed_2<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> <span class="token comment">// o_obs now holds 2</span>
-
 </code></pre>
 </div></div></div></div><div class="st-block" id="o.ObservedType" data-categories="observable,toc" data-tags="category"><div class="st-name st-kind-typealias"><b>type o.ObservedType</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --> = <span class="st-type"><a href="#T">T<!-- If --><!-- /If --></a> extends <a href="#o.ReadonlyObservable">ReadonlyObservable<!-- If -->&lt;<!-- Repeat --><span>infer U</span><!-- end repeat -->&gt;<!-- /If --></a> ? <a href="#U">U<!-- If --><!-- /If --></a> : <a href="#T">T<!-- If --><!-- /If --></a></span></div><div class="st-doc"><p>Get the type of the element of an observable. Works on <code>#o.RO</code> as well.</p>
 </div></div><div class="st-block" id="o.Observer" data-categories="observable,toc" data-tags="category"><div class="st-name st-kind-class"><b>class o.Observer</b><!-- If -->&lt;<!-- Repeat --><span>A<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->  <!-- If -->implements <!-- Repeat --><span><a href="#Indexable">Indexable</a></span><!-- end repeat --><!-- /If --></div><div class="st-doc"><p>An <code>Observer</code> observes an <a href="#o.Observable"><code>o.Observable</code></a>. <code>Observable</code>s maintain a list of <strong>active</strong>
@@ -1725,7 +1691,6 @@ document.body.appendChild(&lt;$>
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">MyComponent</span></span> <span class="token attr-name">title</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>world str !<span class="token punctuation">'</span></span><span class="token punctuation">/></span></span><span class="token plain-text">
   </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">MyComponent</span></span> <span class="token attr-name">title</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>o_str<span class="token punctuation">}</span></span><span class="token punctuation">/></span></span><span class="token plain-text">
 &lt;/$>)
-
 </span></code></pre>
 </div></div><div class="st-block" id="o.ROProps" data-categories="" data-tags=""><div class="st-name st-kind-typealias"><b>type o.ROProps</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --> = <span>{ [<span>P<!-- If --> in <span>typeof T</span><!-- /If --></span>]: <a href="#RO">RO<!-- If -->&lt;<!-- Repeat --><span><a href="#T">T<!-- If --><!-- /If --></a>[<a href="#P">P<!-- If --><!-- /If --></a>]</span><!-- end repeat -->&gt;<!-- /If --></a> }</span></div><div class="st-doc"><p>Transforms the type to make its values <a href="#o.RO"><code>o.RO</code></a></p>
 </div></div><div class="st-block" id="o.ReadonlyConverter" data-categories="" data-tags=""><div class="st-name st-kind-interface"><b>interface o.ReadonlyConverter</b><!-- If -->&lt;<!-- Repeat --><span>A<!-- If --><!-- /If --></span>, <span>B<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If --><!-- If --><!-- /If --></div><div class="st-doc"><p>For use with <a href="#o.Observable#tf"><code>o.Observable#tf</code></a>. The <code>ReadonlyConverter</code> only provides a transformation
@@ -1788,7 +1753,6 @@ Try <a href="#o.transaction"><code>o.transaction()</code></a> for a different ap
 o_obj<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span>a<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
 o_obj<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span>b<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">// the array is changed</span>
 o_obj<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span>b<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token number">0</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">// only the object at index 0 is changed</span>
-
 </code></pre>
 <ul>
 <li><strong>returns</strong> a new instance of the object if the mutator would change it</li>
@@ -1845,7 +1809,6 @@ Also, this allows for creating observables depending on a combination of readabl
     <span class="token punctuation">}</span>
   <span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token plain-text">
-
 </span></code></pre>
 </div></div><div class="st-block" id="o.debounce" data-categories="observable,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>o.debounce</b><!-- If --><!-- /If -->(
   <!-- Repeat --><span class=""><b>ms</b>: <span>number</span></span>,
@@ -1873,7 +1836,6 @@ call.</p>
     <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'stuff'</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-
 </code></pre>
 </div></div><div class="st-block" id="o.exclusive_lock" data-categories="observable,toc" data-tags="returns,category"><div class="st-name st-kind-function"><b>o.exclusive_lock</b><!-- If --><!-- /If -->(<!-- Repeat --><!-- end repeat -->): <span>(fn: () =&gt; void) =&gt; void</span></div><div class="st-doc"><p>Returns a function that accepts a callback. While this callback is running, all subsequent
 calls to the created lock become no-op.</p>
@@ -1898,7 +1860,6 @@ which could end up in an infinite loop, or when dealing with DOM Events.</p>
     <span class="token comment">// ...</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
-
 </code></pre>
 </div></div><div class="st-block" id="o.merge" data-categories="observable,toc" data-tags="code,returns,category"><div class="st-name st-kind-function"><b>o.merge</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>obj</b>: <span>{ [<span>K<!-- If --> in <span>typeof T</span><!-- /If --></span>]: <span class="st-type"><!-- Repeat --><a href="#o.Observable">Observable<!-- If -->&lt;<!-- Repeat --><span><a href="#T">T<!-- If --><!-- /If --></a>[<a href="#K">K<!-- If --><!-- /If --></a>]</span><!-- end repeat -->&gt;<!-- /If --></a> | <span><a href="#T">T<!-- If --><!-- /If --></a>[<a href="#K">K<!-- If --><!-- /If --></a>]</span><!-- end repeat --></span> }</span></span><!-- end repeat -->): <a href="#o.Observable">Observable<!-- If -->&lt;<!-- Repeat --><a href="#T">T<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a></div><div class="st-name st-kind-function"><b>o.merge</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>obj</b>: <span>{ [<span>K<!-- If --> in <span>typeof T</span><!-- /If --></span>]: <a href="#RO">RO<!-- If -->&lt;<!-- Repeat --><span><a href="#T">T<!-- If --><!-- /If --></a>[<a href="#K">K<!-- If --><!-- /If --></a>]</span><!-- end repeat -->&gt;<!-- /If --></a> }</span></span><!-- end repeat -->): <a href="#o.ReadonlyObservable">ReadonlyObservable<!-- If -->&lt;<!-- Repeat --><a href="#T">T<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a></div><div class="st-doc"><p>Create an <code>Observable</code> from an object whose values may be observables.</p>
 <p>The observed value becomes an object resembling <code>obj</code>. Observers on a merged
@@ -1915,7 +1876,6 @@ writable.</p>
 
 merged<span class="token punctuation">.</span><span class="token function">p</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'bye'</span><span class="token punctuation">)</span>
 merged<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span>b<span class="token operator">:</span> <span class="token string">'universe'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-
 </code></pre>
 <ul>
 <li><strong>returns</strong> An observable which properties are the ones given in <code>obj</code> and values
@@ -1997,7 +1957,6 @@ call <code>fn</code> immediately. Otherwise, it will wait <code>ms</code> millis
     <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'stuff'</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-
 </code></pre>
 </div></div><div class="st-block" id="o.transaction" data-categories="observable,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>o.transaction</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>fn</b>: <span class="st-type">(<!-- Repeat --><!-- end repeat -->) =&lt; <span>void</span></span></span><!-- end repeat -->): <span>void</span></div><div class="st-doc"><p>Start an observable transaction, where the observers of all the observables being
 set or assigned to during the callback are only called at the end.</p>
@@ -2018,7 +1977,6 @@ o<span class="token punctuation">.</span><span class="token function">transactio
   o_1<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
   o_2<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="o.tuple" data-categories="observable,toc" data-tags="code,category"><div class="st-name st-kind-function"><b>o.tuple</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --> extends <span><span>any</span>[]</span><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class="optional"><b>...t</b>?: <a href="#T">T<!-- If --><!-- /If --></a></span><!-- end repeat -->): <a href="#T">T<!-- If --><!-- /If --></a></div><div class="st-doc"><p>Returns its arguments as an array but typed as a tuple from Typescript's point of view.</p>
 <p>This only exists because there is no way to declare a tuple in Typescript other than with a plain
@@ -2027,7 +1985,6 @@ array, and arrays with several types end up as an union.</p>
 
 <span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'hello'</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token comment">// a is (string | number)[]</span>
 <span class="token keyword">var</span> b <span class="token operator">=</span> o<span class="token punctuation">.</span><span class="token function">tuple</span><span class="token punctuation">(</span><span class="token string">'hello'</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment">// b is [string, number]</span>
-
 </code></pre>
 </div></div><div class="st-block" id="remove_node" data-categories="low level dom,toc" data-tags="category"><div class="st-name st-kind-function"><b>remove_node</b><!-- If --><!-- /If -->(<!-- Repeat --><span class=""><b>node</b>: <a href="#Node">Node<!-- If --><!-- /If --></a></span><!-- end repeat -->): <span>void</span></div><div class="st-doc"><p>Remove a <code>node</code> from the tree and call <code>removed</code> on its mixins and all the <code>removed</code> callbacks..</p>
 <p>This function is mostly used by verbs that don't want to wait for the mutation observer
@@ -2060,7 +2017,6 @@ to stop all the observers when the window closes.</p>
 <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   o_test<span class="token punctuation">.</span><span class="token function">mutate</span><span class="token punctuation">(</span><span class="token parameter">t</span> <span class="token operator">=></span> t <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="sym_init" data-categories="low level dom,toc" data-tags="category"><div class="st-kind-var"><div class="st-name"><span class="st-kind">const</span><span class=""><b>sym_init</b>: <span>typeof sym_init</span></span></div></div><div class="st-doc"><p>A symbol property on <code>Node</code> to an array of functions to run when the node is <strong>init</strong>, which is to
 say usually right when it was created but already added to a parent (which can be a <code>DocumentFragment</code>).</p>
@@ -2094,7 +2050,6 @@ To sort in descending order, make a tuple with 'desc' as the second argument.</p
 
 <span class="token keyword">const</span> o_something <span class="token operator">=</span> <span class="token function">o</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">{</span>a<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> b<span class="token operator">:</span> <span class="token string">'hello'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>a<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> b<span class="token operator">:</span> <span class="token string">'world'</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 <span class="token keyword">const</span> o_sorted <span class="token operator">=</span> o_something<span class="token punctuation">.</span><span class="token function">tf</span><span class="token punctuation">(</span>tf<span class="token punctuation">.</span><span class="token function">array_sort_by</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token parameter">t</span> <span class="token operator">=></span> t<span class="token punctuation">.</span>b<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token parameter">t</span> <span class="token operator">=></span> t<span class="token punctuation">.</span>a<span class="token punctuation">,</span> <span class="token string">'desc'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-
 </code></pre>
 </div></div><div class="st-block" id="tf.array_transform" data-categories="observable,toc" data-tags="category"><div class="st-name st-kind-function"><b>tf.array_transform</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class=""><b>fn</b>: <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span class="st-type"><!-- Repeat --><span><span>number</span>[]</span> | <span>(<span class="st-type">(<!-- Repeat --><span class=""><b>array</b>: <span><a href="#T">T<!-- If --><!-- /If --></a>[]</span></span><!-- end repeat -->) =&lt; <span><span>number</span>[]</span></span>)</span><!-- end repeat --></span><!-- end repeat -->&gt;<!-- /If --></a></span><!-- end repeat -->): <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><span class="st-type"><!-- Repeat --><a href="#o.Converter">o.Converter<!-- If -->&lt;<!-- Repeat --><span><a href="#T">T<!-- If --><!-- /If --></a>[]</span>, <span><a href="#T">T<!-- If --><!-- /If --></a>[]</span><!-- end repeat -->&gt;<!-- /If --></a> & <span class="st-type">{ <!-- Repeat --><!-- end repeat --> <!-- Repeat -->indices: <span><span>number</span>[]</span><!-- end repeat --> }</span><!-- end repeat --></span><!-- end repeat -->&gt;<!-- /If --></a></div><div class="st-doc"><p>Transform an observable of array into another array based on either
 an array of numbers (which are indices) or a function that takes the
@@ -2114,7 +2069,6 @@ the original <code>observable</code> has the same value than <code>other</code>.
 <span class="token comment">// false now</span>
 o_str<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'world'</span><span class="token punctuation">)</span>
 <span class="token comment">// o_is_world is now true</span>
-
 </code></pre>
 </div></div><div class="st-block" id="tf.map_entries" data-categories="observable,toc" data-tags="category"><div class="st-name st-kind-function"><b>tf.map_entries</b><!-- If -->&lt;<!-- Repeat --><span>K<!-- If --><!-- /If --></span>, <span>V<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><!-- end repeat -->): <a href="#o.Converter">o.Converter<!-- If -->&lt;<!-- Repeat --><a href="#Map">Map<!-- If -->&lt;<!-- Repeat --><a href="#K">K<!-- If --><!-- /If --></a>, <a href="#V">V<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a>, <span><span class="st-type">[<!-- Repeat --><a href="#K">K<!-- If --><!-- /If --></a>, <a href="#V">V<!-- If --><!-- /If --></a><!-- end repeat -->]</span>[]</span><!-- end repeat -->&gt;<!-- /If --></a></div><div class="st-doc"><p>Object entries, as returned by Object.keys() and returned as an array of [key, value][]</p>
 </div></div><div class="st-block" id="tf.set_has" data-categories="observable,toc" data-tags="category"><div class="st-name st-kind-function"><b>tf.set_has</b><!-- If -->&lt;<!-- Repeat --><span>T<!-- If --><!-- /If --></span><!-- end repeat -->&gt;<!-- /If -->(<!-- Repeat --><span class="optional"><b>...values</b>?: <span><a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><a href="#T">T<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a>[]</span></span><!-- end repeat -->): <a href="#o.RO">o.RO<!-- If -->&lt;<!-- Repeat --><a href="#o.Converter">o.Converter<!-- If -->&lt;<!-- Repeat --><a href="#Set">Set<!-- If -->&lt;<!-- Repeat --><a href="#T">T<!-- If --><!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a>, <span>boolean</span><!-- end repeat -->&gt;<!-- /If --></a><!-- end repeat -->&gt;<!-- /If --></a></div><div class="st-doc"><p>Make a boolean observable from the presence of given values in a <code>Set</code>.

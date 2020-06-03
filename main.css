@@ -76,6 +76,11 @@ code {
   border-radius: 2px;
 }
 
+pre > code {
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0);
+}
+
 a > code {
   color: rgba(var(--st-class), 1);
   text-decoration: underline;
