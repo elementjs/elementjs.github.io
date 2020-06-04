@@ -9,6 +9,7 @@
 <li>All overheads induced by its use <strong>should</strong> be kept as low as possible</li>
 <li>Everything <strong>must</strong> be typed correctly. This library <strong>must</strong> be refactoring-friendly.</li>
 </ul>
+<p>Join the (discord)[https://discord.gg/A8tKA7q] for questions or use the tags <code>#typescript</code> and <code>#elt</code> on stack overflow, go to the (repository)[https://github.com/elementjs/elt] to file issues.</p>
 <h2 id="_doc1">Why use it</h2>
 <ul>
 <li>
@@ -40,7 +41,7 @@
 <p>Since observing an observable makes them keeps a reference to their observers in the memory, observers have to be deregistered properly when they're not used anymore. To alleviate the burden on the programmer and avoid forgetting to stop the observers -- and thus create memory leaks, ELT associates observing with nodes and whether they're in the document or not. See <a href="#$observe"><code>$observe()</code></a>, <a href="#node_observe"><code>node_observe()</code></a> and <a href="#Mixin.observe"><code>Mixin.observe()</code></a>.</p>
 </li>
 <li>
-<p>Since the DOM does not offer a simple way to know <em>when</em> a node is added or removed from the document other than using a <code>MutationObserver</code>, ELT offers a way to react to these events by setting up the observer itself and registering callbacks directly on the <code>Node</code>s. See <a href="#$inserted"><code>$inserted()</code></a>, <a href="#$removed"><code>$removed()</code></a>, but also <a href="#$prepare"><code>$prepare()</code></a>.</p>
+<p>Since the DOM does not offer a simple way to know <em>when</em> a node is added or removed from the document other than using a <code>MutationObserver</code>, ELT offers a way to react to these events by setting up the observer itself and registering callbacks directly on the <code>Node</code>s. See <a href="#$inserted"><code>$inserted()</code></a>, <a href="#$removed"><code>$removed()</code></a>, but also <a href="#$init"><code>$init()</code></a>.</p>
 </li>
 <li>
 <p>Instead of creating components that change what they render based on the values of Observables, such as an hypothetical <code>&lt;If condition={...}&gt;</code>, ELT uses &quot;verbs&quot; ; functions whose name starts with an <strong>upper-case</strong> letter. While a component-based approach would work perfectly, the &quot;verb&quot; approach is more explicit about where dynamicity is happening in the code. See <a href="#If"><code>If()</code></a>, <a href="#Repeat"><code>Repeat</code></a>, <a href="#RepeatScroll"><code>RepeatScroll</code></a> and <a href="#Switch"><code>Switch</code></a>.</p>
