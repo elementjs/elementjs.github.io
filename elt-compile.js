@@ -1,3 +1,19 @@
+const search = document.getElementById('search')
+search.addEventListener('keyup', inp => {
+  const search = inp.currentTarget.value.toLowerCase()
+  console.log('??')
+  const toc = document.getElementById('toc')
+  var iter = toc.firstElementChild
+  while (iter) {
+    if (!search || iter.textContent.toLowerCase().includes(search)) {
+      iter.style.display = 'block'
+    } else {
+      iter.style.display = 'none'
+    }
+    iter = iter.nextElementSibling
+  }
+})
+
 function scrollToHash(id) {
   var elt = document.getElementById(id)
   if (elt) {

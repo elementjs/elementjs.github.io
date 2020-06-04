@@ -2,7 +2,31 @@
   box-sizing: border-box;
 }
 
+a > h1, a > h2, a> h3, a > h4 {
+  margin: 0.2em 0;
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.st-toc a > b {
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.toc-nest-2 {
+  margin-left: 1em;
+}
+
+.toc-nest-3 {
+  margin-left: 2em;
+}
+
+.toc-nest-4 {
+  margin-left: 3em;
+}
+
 html, body {
+  line-height: 1.25em;
   padding: 0; margin: 0;
   overflow: hidden;
   /* font-weight: 300; */
@@ -26,7 +50,7 @@ h3 {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', 'Ubuntu', 'Lucida Grande', 'Segoe UI', sans-serif;
   box-sizing: border-box;
   color: rgb(var(--st-primary));
   --st-bg: 255, 255, 255;
@@ -52,21 +76,19 @@ body.dark {
   --st-error: 255, 99, 99;
 }
 
-.st-type {
-  /* background-color: rgba(var(--st-primary), 0.14); */
-  padding: 0 2px;
-  border-bottom: 2px solid rgba(var(--st-primary), 0.14);
+#searchdiv {
+  padding: 16px;
+  background-color: rgb(var(--st-class));
 }
 
-.st-type > .st-type {
-  padding-bottom: 2px;
-  border-bottom: 2px solid rgba(var(--st-primary), 0.24);
+#searchdiv input {
+  width: 100%;
+  color: white;
+  padding: 4px;
+  border-color: rgba(255, 255, 255, 0.5);
+  font-size: 1.3em;
 }
 
-.st-type > .st-type > .st-type {
-  padding-bottom: 4px;
-  border-bottom: 2px solid rgba(var(--st-primary), 0.34);
-}
 
 code {
   font-family: 'Oxygen Mono', monospace;
@@ -303,10 +325,6 @@ a:hover {
   background: rgba(var(--st-primary), 0.1);
 }
 
-.st-search {
-  margin: 16px;
-}
-
 input {
   background: rgba(var(--st-primary), 0.02);
   border: 1px solid rgba(var(--st-primary), 0.14);
@@ -341,7 +359,7 @@ pre {
 }
 
 h1, h2, h3, h4, h5, h6, p {
-  margin: 1em 0;
+  margin: 1.5em 0;
 }
 
 .st-example {
